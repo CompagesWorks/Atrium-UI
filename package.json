@@ -1,7 +1,7 @@
 {
   "name": "atrium-ui",
   "version": "0.1.0",
-  "description": "Atrium-UI: the MOSAIC interface (tokens, animations, toasts, modals) as a reusable vanilla TypeScript library",
+  "description": "Atrium-UI: the MOSAIC interface (tokens, animations, components, app shell) as a reusable vanilla TypeScript library",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "files": [
@@ -9,13 +9,19 @@
     "LICENSE",
     "THIRD-PARTY-NOTICES.md"
   ],
-  "main": "./dist/atrium-ui.js",
+  "main": "./dist/atrium-ui.cjs",
   "module": "./dist/atrium-ui.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/atrium-ui.js"
+      "import": "./dist/atrium-ui.js",
+      "require": "./dist/atrium-ui.cjs"
+    },
+    "./electron": {
+      "types": "./dist/types/electron/index.d.ts",
+      "import": "./dist/electron.js",
+      "require": "./dist/electron.cjs"
     },
     "./style.css": "./dist/atrium-ui.css"
   },
@@ -25,6 +31,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
     "build:playground": "vite build --mode playground",
     "preview:playground": "vite preview --mode playground",
     "typecheck": "tsc --noEmit"

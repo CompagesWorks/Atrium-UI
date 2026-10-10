@@ -9,6 +9,7 @@ import { createTabs, type Tabs, type TabsOptions } from './components/tabs';
 import { ToastManager } from './components/toast';
 import { TooltipManager } from './components/tooltip';
 import { AtriumContext, type AtriumOptions, type MotionMode, type ThemeName } from './core/context';
+import type { AtriumWindowApi } from './electron';
 
 export interface WindowControls {
   minimize?: () => void;
@@ -29,8 +30,12 @@ export interface Atrium {
   select(element: HTMLSelectElement, options?: SelectOptions): SelectHandle;
   /** Drives an .atrium-statusbar: animated status text, tones, bounce. */
   statusbar(element: HTMLElement): Statusbar;
-  /** Wires the titlebar's [data-atrium-window="minimize|maximize|close"] buttons. Returns an unbind function. */
-  windowControls(handlers: WindowControls): () => void;
+  /**
+   * Wires the titlebar's [data-atrium-window="minimize|maximize|close"] buttons. Returns an unbind function.
+   * With no handlers, uses the API exposed by atrium-ui/electron's preload (window.atriumWindow)
+   * and keeps `.is-maximized` on .atrium-titlebar in sync.
+   */
+  windowControls(handlers?: WindowControls): () => void;
   /** MOSAIC's file drop target: the status bar grows into a dashed drop zone while files are dragged. */
   dropzone(options: DropzoneOptions): Dropzone;
   readonly theme: ThemeName;
@@ -79,13 +84,35 @@ export function createAtrium(options: AtriumOptions = {}): Atrium {
       return zone;
     },
     windowControls(handlers) {
+      const bridge = (window as unknown as { atriumWindow?: AtriumWindowApi }).atriumWindow;
+      const actions: WindowControls = handlers ?? {
+        minimize: () => bridge?.minimize(),
+        maximize: () => bridge?.maximize(),
+        close: () => bridge?.close(),
+      };
+      if (!handlers && !bridge) {
+        console.warn('[Atrium] windowControls(): no handlers and no window.atriumWindow (see atrium-ui/electron)');
+      }
+
       const onClick = (e: Event) => {
         const button = (e.target as Element | null)?.closest<HTMLElement>('[data-atrium-window]');
         const action = button?.dataset.atriumWindow as keyof WindowControls | undefined;
-        if (action) handlers[action]?.();
+        if (action) actions[action]?.();
       };
       document.addEventListener('click', onClick);
-      const unbind = () => document.removeEventListener('click', onClick);
+
+      let unsubscribe: (() => void) | undefined;
+      if (!handlers && bridge) {
+        const sync = (maximized: boolean) =>
+          document.querySelectorAll('.atrium-titlebar').forEach((bar) => bar.classList.toggle('is-maximized', maximized));
+        void bridge.isMaximized().then(sync);
+        unsubscribe = bridge.onMaximizedChange(sync);
+      }
+
+      const unbind = () => {
+        document.removeEventListener('click', onClick);
+        unsubscribe?.();
+      };
       cleanups.push(unbind);
       return unbind;
     },
@@ -116,6 +143,7 @@ export type { MenuEntry, MenuItem } from './components/menu';
 export type { SelectHandle, SelectOptions } from './components/select';
 export type { Statusbar, StatusTone } from './components/statusbar';
 export type { Dropzone, DropzoneOptions } from './components/dropzone';
+export type { AtriumWindowApi } from './electron';
 export type { TooltipOptions, TooltipPlacement } from './components/tooltip';
 export type {
   ModalOptions,
