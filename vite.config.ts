@@ -1,8 +1,30 @@
+import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+/**
+ * The playground bundles Bootstrap Icons, whose MIT license must ship with it, but the
+ * CSS minifier drops its license comment. Serve and emit THIRD-PARTY-NOTICES.txt instead.
+ */
+function thirdPartyNotices(): Plugin {
+  const fileName = 'THIRD-PARTY-NOTICES.txt';
+  const read = () => readFileSync(resolve(__dirname, 'THIRD-PARTY-NOTICES.md'), 'utf8');
+  return {
+    name: 'atrium-third-party-notices',
+    configureServer(server) {
+      server.middlewares.use(`/${fileName}`, (_req, res) => {
+        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+        res.end(read());
+      });
+    },
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName, source: read() });
+    },
+  };
+}
 
 export default defineConfig(({ command, mode }) => {
   if (command === 'serve' || mode === 'playground') {
@@ -12,6 +34,7 @@ export default defineConfig(({ command, mode }) => {
       root: resolve(__dirname, 'playground'),
       base: mode === 'playground' ? (process.env.PLAYGROUND_BASE ?? '/Atrium-UI/') : '/',
       server: { fs: { allow: [__dirname] } },
+      plugins: [thirdPartyNotices()],
       build: {
         outDir: resolve(__dirname, 'dist-playground'),
         emptyOutDir: true,

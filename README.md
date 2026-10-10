@@ -291,6 +291,10 @@ The playground is deployed to GitHub Pages by `.github/workflows/pages.yml` on e
 - [ ] Built-in UI sounds, splash screen and loading Lottie
 - [ ] Guided tutorial
 
+## Third-party notices
+
+Atrium-UI uses [Bootstrap Icons](https://icons.getbootstrap.com/) (MIT, © The Bootstrap Authors) for its icons. Its license is reproduced in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), which also ships with the npm package and the playground site. If your app bundles Bootstrap Icons, keep its MIT notice too.
+
 ## Attribution
 
 Atrium-UI is released under the [Atrium-UI License](LICENSE): MIT, plus one condition. Any product that uses Atrium-UI, in whole or in part (modified versions and derived styles or animations included), must show this credit **inside its own interface**:

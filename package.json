@@ -6,7 +6,8 @@
   "type": "module",
   "files": [
     "dist",
-    "LICENSE"
+    "LICENSE",
+    "THIRD-PARTY-NOTICES.md"
   ],
   "main": "./dist/atrium-ui.js",
   "module": "./dist/atrium-ui.js",
