@@ -1,6 +1,6 @@
 Atrium-UI License (MIT with visible attribution)
 
-Copyright (c) 2026 MOSAIC Foundation
+Copyright (c) 2026 Compages Works
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@ furnished to do so, subject to the following conditions:
       users can open from the product itself, such as Credits or Settings.
 
    b. The credit must read "UI by Atrium-UI", or a faithful translation of
-      it, and must include a link to https://github.com/MosaicFoundation/Atrium-UI
+      it, and must include a link to https://github.com/CompagesWorks/Atrium-UI
       wherever the screen can show links.
 
    c. A mention only in source code, in a README, in documentation or in any

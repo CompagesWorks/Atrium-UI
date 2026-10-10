@@ -7,14 +7,14 @@
 
 MOSAIC's interface (theme, animations, buttons, forms, toasts, modals, menus, tooltips, tabs, app shell) as a reusable vanilla TypeScript library.
 
-> **Attribution required.** Any project that uses Atrium-UI must show "UI by [Atrium-UI](https://github.com/MosaicFoundation/Atrium-UI)" **inside the app, in its About screen**. A mention only in a README or in the code is not enough. See [Attribution](#attribution) and [LICENSE](LICENSE).
+> **Attribution required.** Any project that uses Atrium-UI must show "UI by [Atrium-UI](https://github.com/CompagesWorks/Atrium-UI)" **inside the app, in its About screen**. A mention only in a README or in the code is not enough. See [Attribution](#attribution) and [LICENSE](LICENSE).
 
 ## Install
 
 From another project, as a git dependency (npm builds `dist/` on install):
 
 ```bash
-npm install github:MosaicFoundation/Atrium-UI bootstrap-icons
+npm install github:CompagesWorks/Atrium-UI bootstrap-icons
 ```
 
 or from a local checkout while developing:
@@ -430,7 +430,7 @@ Atrium-UI uses [Bootstrap Icons](https://icons.getbootstrap.com/) (MIT, © The B
 Atrium-UI is released under the [Atrium-UI License](LICENSE): MIT, plus one condition. Any product that uses Atrium-UI, in whole or in part (modified versions and derived styles or animations included), must show this credit **inside its own interface**:
 
 ```
-UI by Atrium-UI — https://github.com/MosaicFoundation/Atrium-UI
+UI by Atrium-UI — https://github.com/CompagesWorks/Atrium-UI
 ```
 
 - **Where:** in the product's About screen. If it has none, in an equivalent screen users can open from the app (Credits, Settings).
