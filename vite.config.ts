@@ -48,11 +48,15 @@ export default defineConfig(({ command, mode }) => {
         entry: {
           'atrium-ui': resolve(__dirname, 'src/index.ts'),
           electron: resolve(__dirname, 'src/electron/index.ts'),
+          preload: resolve(__dirname, 'src/electron/preload.ts'),
         },
         // CommonJS too: Electron preloads run as CommonJS when sandboxed (the default).
         formats: ['es', 'cjs'],
         fileName: (format, name) => `${name}.${format === 'es' ? 'js' : 'cjs'}`,
         cssFileName: 'atrium-ui',
+      },
+      rollupOptions: {
+        external: ['electron', /^node:/],
       },
       sourcemap: true,
     },

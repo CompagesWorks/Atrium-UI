@@ -1,13 +1,17 @@
 /**
  * atrium-ui/electron: wiring for the custom titlebar's window buttons.
  *
- *   main.ts     registerWindowControls({ ipcMain, BrowserWindow })
- *   preload.ts  exposeWindowControls({ contextBridge, ipcRenderer })
- *   renderer    atrium.windowControls()   // picks up window.atriumWindow automatically
+ *   main      registerWindowControls({ ipcMain, BrowserWindow, session })
+ *             (with `session`, Atrium's own preload is registered for you)
+ *   renderer  atrium.windowControls()   // uses window.atriumWindow automatically
+ *
+ * If you'd rather expose the API from your own (bundled) preload, call
+ * exposeWindowControls() there and leave `session` out.
  *
  * Electron's objects are passed in rather than imported, so this module has no
  * dependency on the electron package and works from ESM or CommonJS.
  */
+import { fileURLToPath } from 'node:url';
 
 export const WINDOW_CHANNELS = {
   minimize: 'atrium:window:minimize',
@@ -26,6 +30,15 @@ export interface AtriumWindowApi {
   isMaximized(): Promise<boolean>;
   /** Calls back whenever the window is maximized or restored. Returns an unsubscribe function. */
   onMaximizedChange(callback: (maximized: boolean) => void): () => void;
+}
+
+/**
+ * Absolute path of Atrium's standalone preload (dist/preload.cjs). It only requires
+ * 'electron', so it works in sandboxed renderers. Use it as `webPreferences.preload`
+ * or let registerWindowControls({ session }) register it.
+ */
+export function getPreloadPath(): string {
+  return fileURLToPath(new URL('./preload.cjs', import.meta.url));
 }
 
 // ---------- Minimal shapes of the Electron APIs used ----------
@@ -61,6 +74,14 @@ interface BrowserWindowStaticLike {
   fromWebContents(webContents: never): BrowserWindowLike | null;
 }
 
+interface SessionLike {
+  /** Electron 35+ */
+  registerPreloadScript?(script: { type: 'frame' | 'service-worker'; filePath: string; id?: string }): string;
+  /** Electron < 35 */
+  getPreloads?(): string[];
+  setPreloads?(preloads: string[]): void;
+}
+
 interface IpcRendererLike {
   send(channel: string, ...args: unknown[]): void;
   invoke(channel: string, ...args: unknown[]): Promise<unknown>;
@@ -76,14 +97,27 @@ interface ContextBridgeLike {
 
 /**
  * Handles the titlebar buttons for every BrowserWindow, and tells each renderer
- * when its window is maximized or restored. Call once, in the main process.
- * Returns a function that removes the handlers.
+ * when its window is maximized or restored. Call once, in the main process,
+ * before creating windows. Pass Electron's `session` module (or a Session) to also
+ * register Atrium's preload, so `window.atriumWindow` exists without touching your
+ * own preload. Returns a function that removes the handlers.
  */
 export function registerWindowControls(electron: {
   ipcMain: IpcMainLike;
   BrowserWindow: BrowserWindowStaticLike;
+  session?: { defaultSession: SessionLike } | SessionLike;
 }): () => void {
   const { ipcMain, BrowserWindow } = electron;
+
+  if (electron.session) {
+    const session = 'defaultSession' in electron.session ? electron.session.defaultSession : electron.session;
+    const filePath = getPreloadPath();
+    if (session.registerPreloadScript) {
+      session.registerPreloadScript({ type: 'frame', id: 'atrium-ui-window-controls', filePath });
+    } else if (session.setPreloads && session.getPreloads) {
+      session.setPreloads([...session.getPreloads().filter((p) => p !== filePath), filePath]);
+    }
+  }
   const watched = new WeakSet<BrowserWindowLike>();
 
   const windowOf = (event: IpcMainEventLike): BrowserWindowLike | null => {

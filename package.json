@@ -23,6 +23,7 @@
       "import": "./dist/electron.js",
       "require": "./dist/electron.cjs"
     },
+    "./preload": "./dist/preload.cjs",
     "./style.css": "./dist/atrium-ui.css"
   },
   "sideEffects": [
