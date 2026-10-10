@@ -1,10 +1,13 @@
 import { createAtrium, replayAnimation, stagger, type MotionMode, type StatusTone, type ThemeName, type ToastType } from '../src';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import logoUrl from '../logo.png';
 
 const atrium = createAtrium();
 (window as unknown as { atrium: typeof atrium }).atrium = atrium;
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
+
+$<HTMLImageElement>('#pg-logo').src = logoUrl;
 
 // Settings
 const themeSelect = $<HTMLSelectElement>('#theme');

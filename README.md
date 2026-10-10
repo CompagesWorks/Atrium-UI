@@ -1,4 +1,4 @@
-# Atrium-UI
+<h1><img src="logo.png" alt="Atrium-UI" width="360"></h1>
 
 MOSAIC's interface (theme, animations, buttons, forms, toasts, modals, menus, tooltips, tabs, app shell) as a reusable vanilla TypeScript library.
 
