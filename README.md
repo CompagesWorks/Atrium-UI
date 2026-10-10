@@ -270,9 +270,13 @@ All tokens are `--atrium-*` CSS variables (see `src/styles/tokens.css`). Overrid
 
 ```bash
 npm install
-npm run dev      # playground on http://localhost:5173
-npm run build    # dist/atrium-ui.js, dist/atrium-ui.css, dist/types
+npm run dev               # playground on http://localhost:5173
+npm run build             # dist/atrium-ui.js, dist/atrium-ui.css, dist/types
+npm run build:playground  # static playground site in dist-playground/ (served from /Atrium-UI/)
+npm run preview:playground
 ```
+
+The playground is deployed to GitHub Pages by `.github/workflows/pages.yml` on every push to `main`. In the repository settings, set **Pages → Source** to **GitHub Actions**. To serve it from another path, set `PLAYGROUND_BASE` (for example `/` for a custom domain).
 
 ## Roadmap
 
