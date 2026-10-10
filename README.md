@@ -11,10 +11,10 @@ MOSAIC's interface (theme, animations, buttons, forms, toasts, modals, menus, to
 
 ## Install
 
-From another project, as a git dependency:
+From another project, as a git dependency (npm builds `dist/` on install):
 
 ```bash
-npm install github:MosaicFoundation/Atrium-UI
+npm install github:MosaicFoundation/Atrium-UI bootstrap-icons
 ```
 
 or from a local checkout while developing:
@@ -163,12 +163,9 @@ const remove = atrium.tooltip.attach(element, 'Text', { placement: 'bottom', del
 `atrium-titlebar`, `atrium-sidebar`, `atrium-main`, `atrium-content` and `atrium-statusbar` rebuild MOSAIC's window layout; the full markup is at the top of `src/styles/components/shell.css`. Sizes come from `--atrium-titlebar-height`, `--atrium-sidebar-width` and `--atrium-statusbar-height`.
 
 ```ts
-// Titlebar buttons with data-atrium-window="minimize|maximize|close"
-atrium.windowControls({
-  minimize: () => window.api.minimize(),
-  maximize: () => window.api.maximize(),
-  close: () => window.api.close(),
-});
+// Titlebar buttons with data-atrium-window="minimize|maximize|close".
+// In Electron, call it with no arguments (see "Electron" below); elsewhere pass your own handlers.
+atrium.windowControls();
 
 // Status bar with MOSAIC's blur-and-slide text swap
 const status = atrium.statusbar(document.querySelector('.atrium-statusbar'));
@@ -191,6 +188,45 @@ atrium.dropzone({
   title: 'Drop mod files here',                         // badge, title, hint and icon are customisable
 });
 ```
+
+## Electron
+
+Atrium-UI works in any Electron renderer. `atrium-ui/electron` wires the custom titlebar's buttons to the window, with no preload code to write.
+
+**1. Main process.** Call `registerWindowControls` once the app is ready, before creating windows, and open frameless windows:
+
+```ts
+import { app, BrowserWindow, ipcMain, session } from 'electron';
+import { registerWindowControls } from 'atrium-ui/electron';
+
+app.whenReady().then(() => {
+  registerWindowControls({ ipcMain, BrowserWindow, session });
+  new BrowserWindow({ frame: false, webPreferences: { preload: yourOwnPreload } }).loadFile('index.html');
+});
+```
+
+Passing `session` registers Atrium's own preload alongside yours (`session.registerPreloadScript`, Electron 35+), so your preload needs no changes. It only requires `electron`, so it works with `sandbox` and `contextIsolation` on (Electron's defaults).
+
+**2. Renderer.**
+
+```ts
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'atrium-ui/style.css';
+import { createAtrium } from 'atrium-ui';
+
+const atrium = createAtrium();
+atrium.windowControls(); // uses window.atriumWindow, keeps .is-maximized on .atrium-titlebar
+```
+
+The titlebar markup is at the top of `src/styles/components/shell.css`. Dragging the window by the titlebar is handled by the CSS (`app-region: drag`, buttons excluded).
+
+The renderer needs a bundler for the `import`s and the CSS; [electron-vite](https://electron-vite.org/) works out of the box. Without one, load `node_modules/atrium-ui/dist/atrium-ui.css` with a `<link>` and `dist/atrium-ui.js` with `<script type="module">`.
+
+**Other setups.**
+
+- Your own bundled preload instead of the session preload: leave `session` out and call `exposeWindowControls({ contextBridge, ipcRenderer })` in your preload.
+- A single preload file for the window: `webPreferences: { preload: getPreloadPath() }`, or require `atrium-ui/preload`.
+- `window.atriumWindow` also offers `isMaximized()` and `onMaximizedChange(callback)`; its type is `AtriumWindowApi`.
 
 ## Buttons
 
@@ -287,7 +323,7 @@ The playground is deployed to GitHub Pages by `.github/workflows/pages.yml` on e
 - [x] Titlebar, sidebar and status bar
 - [x] File drop zone in the status bar
 - [ ] MOSAIC's expanding "dynamic island" download panel in the status bar
-- [ ] `atrium-ui/electron` preload helpers for the window controls
+- [x] `atrium-ui/electron`: window controls for Electron, sandbox-safe preload
 - [ ] Built-in UI sounds, splash screen and loading Lottie
 - [ ] Guided tutorial
 
