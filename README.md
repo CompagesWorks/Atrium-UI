@@ -210,6 +210,30 @@ sort.refresh(); // after changing the <option>s
 
 It opens upward when there is no room below and supports the keyboard (arrows, Home, End, Enter, Escape).
 
+## Segmented control
+
+2 to 5 options side by side, one selected, with a sliding accent selection (MOSAIC's filter-button style). Arrow keys move between options.
+
+```html
+<div id="view" aria-label="View">
+  <button data-value="grid"><i class="bi bi-grid"></i>Grid</button>
+  <button data-value="list"><i class="bi bi-list-ul"></i>List</button>
+</div>
+```
+
+```ts
+const view = atrium.segmented(document.querySelector('#view'), { value: 'grid', onChange: (v) => setView(v) });
+
+// or build the buttons from data
+atrium.segmented(element, {
+  label: 'Alignment',
+  options: [{ value: 'left', icon: 'text-left' }, { value: 'right', icon: 'text-right', disabled: true }],
+});
+view.setValue('list');
+```
+
+Modifiers: `.is-icons` (icon-only), `.is-small`, `.is-block` (full width).
+
 ## Tooltips
 
 Two kinds, both from MOSAIC:
@@ -393,7 +417,7 @@ The playground is deployed to GitHub Pages by `.github/workflows/pages.yml` on e
 - [x] File drop zone in the status bar
 - [ ] MOSAIC's expanding "dynamic island" download panel in the status bar
 - [x] `atrium-ui/electron`: window controls for Electron, sandbox-safe preload
-- [x] Dropdown menus, `modal.prompt()`, settings rows, command palette with global shortcuts
+- [x] Dropdown menus, `modal.prompt()`, settings rows, command palette with global shortcuts, segmented control
 - [ ] Built-in UI sounds, splash screen and loading Lottie
 - [ ] Guided tutorial
 

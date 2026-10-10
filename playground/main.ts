@@ -346,3 +346,33 @@ $('#open-palette').addEventListener('click', () => atrium.commands.open());
 $('#palette-hotkey').appendChild(renderShortcut('Mod+K'));
 $('#palette-theme-hotkey').appendChild(renderShortcut('Mod+Shift+L'));
 
+// Segmented controls
+atrium.segmented($('#seg-view'), {
+  value: 'grid',
+  onChange: (value) => atrium.toast.info('View: {{value}}', { params: { value } }),
+});
+atrium.segmented($('#seg-icons'), {
+  label: 'Alignment',
+  options: [
+    { value: 'left', icon: 'text-left' },
+    { value: 'center', icon: 'text-center' },
+    { value: 'right', icon: 'text-right' },
+  ],
+});
+atrium.segmented($('#seg-small'), {
+  label: 'Range',
+  value: 'week',
+  options: [
+    { value: 'day', label: 'Day' },
+    { value: 'week', label: 'Week' },
+    { value: 'month', label: 'Month' },
+    { value: 'year', label: 'Year', disabled: true },
+  ],
+});
+atrium.segmented($('#seg-block'), {
+  label: 'Platform',
+  options: [
+    { value: 'switch', label: 'Switch', icon: 'nintendo-switch' },
+    { value: 'emulator', label: 'Emulator', icon: 'pc-display' },
+  ],
+});

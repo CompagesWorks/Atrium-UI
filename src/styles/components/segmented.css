@@ -1,0 +1,114 @@
+/*
+ * Segmented control (Atrium addition): 2-5 options side by side, one selected.
+ * Same materials as MOSAIC's filter buttons (.logs-filter-btn): translucent track,
+ * accent gradient for the selected option, which slides between options.
+ *
+ * <div class="atrium-segmented" aria-label="View">
+ *   <button data-value="grid"><i class="bi bi-grid"></i>Grid</button>
+ *   <button data-value="list"><i class="bi bi-list"></i>List</button>
+ * </div>
+ * atrium.segmented(element, { value: 'grid', onChange })
+ */
+
+.atrium-segmented {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 3px;
+  background: var(--atrium-bg-transparent-05);
+  border: 1px solid var(--atrium-bg-transparent-08);
+  border-radius: 10px;
+  isolation: isolate;
+  font-family: var(--atrium-font-control);
+}
+
+.atrium-segmented.is-block {
+  display: flex;
+  width: 100%;
+}
+
+.atrium-segmented.is-block > button {
+  flex: 1;
+}
+
+/* Sliding selection */
+.atrium-segmented-indicator {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 0;
+  width: 0;
+  z-index: -1;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--atrium-accent-color) 0%, var(--atrium-accent-hover) 100%);
+  box-shadow: 0 4px 16px rgba(var(--atrium-accent-rgb), 0.3);
+  transition:
+    transform 0.3s var(--atrium-ease-out-quint),
+    width 0.3s var(--atrium-ease-out-quint);
+}
+
+.atrium-segmented-indicator.is-instant {
+  transition: none;
+}
+
+.atrium-segmented > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 7px;
+  background: none;
+  color: var(--atrium-text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.atrium-segmented > button:hover:not([aria-checked='true']):not(:disabled) {
+  background: var(--atrium-bg-transparent-08);
+  color: var(--atrium-text-primary);
+}
+
+/* White on the accent gradient in both themes, like MOSAIC's active filter */
+.atrium-segmented > button[aria-checked='true'] {
+  color: #fff;
+}
+
+.atrium-segmented > button:focus-visible {
+  outline: 2px solid var(--atrium-accent-color);
+  outline-offset: 2px;
+}
+
+.atrium-segmented > button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.atrium-segmented > button i {
+  font-size: 14px;
+}
+
+/* Icon-only segments */
+.atrium-segmented.is-icons > button {
+  padding: 6px 10px;
+}
+
+.atrium-segmented.is-small > button {
+  min-height: 24px;
+  padding: 3px 10px;
+  font-size: 12px;
+}
+
+[data-atrium-motion='none'] .atrium-segmented-indicator,
+[data-atrium-motion='none'] .atrium-segmented > button {
+  transition: none !important;
+}

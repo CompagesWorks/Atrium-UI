@@ -4,6 +4,7 @@ import { createDropzone, type Dropzone, type DropzoneOptions } from './component
 import { MenuManager } from './components/menu';
 import { ModalManager } from './components/modal';
 import { CommandPalette } from './components/palette';
+import { createSegmented, type Segmented, type SegmentedOptions } from './components/segmented';
 import { enhanceSelect, type SelectHandle, type SelectOptions } from './components/select';
 import { createStatusbar, type Statusbar } from './components/statusbar';
 import { createTabs, type Tabs, type TabsOptions } from './components/tabs';
@@ -31,6 +32,8 @@ export interface Atrium {
   tabs(options: TabsOptions): Tabs;
   /** Turns a native <select> into MOSAIC's custom dropdown (the native element stays in sync). */
   select(element: HTMLSelectElement, options?: SelectOptions): SelectHandle;
+  /** Segmented control: 2-5 options side by side with a sliding selection. */
+  segmented(element: HTMLElement, options?: SegmentedOptions): Segmented;
   /** Drives an .atrium-statusbar: animated status text, tones, bounce. */
   statusbar(element: HTMLElement): Statusbar;
   /**
@@ -81,6 +84,11 @@ export function createAtrium(options: AtriumOptions = {}): Atrium {
       const handle = enhanceSelect(ctx, element, selectOptions);
       cleanups.push(() => handle.destroy());
       return handle;
+    },
+    segmented: (element, segmentedOptions) => {
+      const control = createSegmented(ctx, element, segmentedOptions);
+      cleanups.push(() => control.destroy());
+      return control;
     },
     statusbar: (element) => createStatusbar(ctx, element),
     dropzone: (dropOptions) => {
@@ -149,6 +157,7 @@ export type { Tabs, TabsOptions, TabTransition } from './components/tabs';
 export type { MenuEntry, MenuItem, MenuPlacement, MenuAnchorOptions } from './components/menu';
 export type { Command, PaletteOptions } from './components/palette';
 export type { SelectHandle, SelectOptions } from './components/select';
+export type { Segmented, SegmentedOptions, SegmentOption } from './components/segmented';
 export type { Statusbar, StatusTone } from './components/statusbar';
 export type { Dropzone, DropzoneOptions } from './components/dropzone';
 export type { AtriumWindowApi } from './electron';
