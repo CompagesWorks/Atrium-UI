@@ -1,20 +1,27 @@
 import { createAtrium, replayAnimation, stagger, type MotionMode, type StatusTone, type ThemeName, type ToastType } from '../src';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import logoUrl from '../logo.png';
+import logoDarkUrl from '../logo.png';
+import logoLightUrl from '../logo-light.png';
 
 const atrium = createAtrium();
 (window as unknown as { atrium: typeof atrium }).atrium = atrium;
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
 
-$<HTMLImageElement>('#pg-logo').src = logoUrl;
+// Logo follows the theme: white "UI" on dark, dark "UI" on light
+const logo = $<HTMLImageElement>('#pg-logo');
+const syncLogo = () => (logo.src = atrium.theme === 'light' ? logoLightUrl : logoDarkUrl);
+syncLogo();
 
 // Settings
 const themeSelect = $<HTMLSelectElement>('#theme');
 const motionSelect = $<HTMLSelectElement>('#motion');
 themeSelect.value = atrium.theme;
 motionSelect.value = atrium.motion;
-themeSelect.addEventListener('change', () => atrium.setTheme(themeSelect.value as ThemeName));
+themeSelect.addEventListener('change', () => {
+  atrium.setTheme(themeSelect.value as ThemeName);
+  syncLogo();
+});
 motionSelect.addEventListener('change', () => atrium.setMotion(motionSelect.value as MotionMode));
 atrium.select(themeSelect);
 atrium.select(motionSelect);
