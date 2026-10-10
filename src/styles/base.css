@@ -1,0 +1,31 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--atrium-font-family);
+  background-color: var(--atrium-bg-primary);
+  color: var(--atrium-text-primary);
+}
+
+/* Full-window app layout, as in MOSAIC. Opt in with <body class="atrium-shell">. */
+.atrium-shell {
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+[data-atrium-theme='light'] ::selection {
+  background-color: rgba(90, 122, 223, 0.2);
+  color: var(--atrium-text-primary);
+}
+
+[data-atrium-theme='light'] .atrium-input::selection {
+  background-color: rgba(90, 122, 223, 0.15);
+}

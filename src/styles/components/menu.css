@@ -1,0 +1,130 @@
+/* Ported from MOSAIC's context-menu.css + animations/modals.css. */
+
+.atrium-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: linear-gradient(135deg, var(--atrium-border-color) 0%, var(--atrium-bg-tertiary) 100%);
+  border: 1px solid var(--atrium-bg-transparent-08);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  min-width: 200px;
+  z-index: 10000;
+  display: none;
+  opacity: 0;
+  transform: scale(0.9) translateY(-8px);
+  pointer-events: none;
+  backdrop-filter: blur(20px);
+  font-family: var(--atrium-font-family);
+  outline: none;
+}
+
+.atrium-menu.is-open {
+  display: block;
+  animation: atrium-menu-in 0.3s var(--atrium-ease-out-expo) forwards;
+}
+
+.atrium-menu.is-closing {
+  animation: atrium-menu-out 0.2s var(--atrium-ease-standard) forwards;
+}
+
+.atrium-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--atrium-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.atrium-menu-item:hover,
+.atrium-menu-item:focus-visible {
+  background: rgba(var(--atrium-accent-rgb), 0.15);
+  outline: none;
+}
+
+.atrium-menu-item i {
+  font-size: 16px;
+  color: var(--atrium-accent-color);
+}
+
+.atrium-menu-item-label {
+  flex: 1;
+}
+
+.atrium-menu-item-hint {
+  color: var(--atrium-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.atrium-menu-item-danger,
+.atrium-menu-item-danger i {
+  color: var(--atrium-danger-color);
+}
+
+.atrium-menu-item-danger:hover,
+.atrium-menu-item-danger:focus-visible {
+  background: rgba(255, 107, 107, 0.15);
+}
+
+.atrium-menu-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: none;
+}
+
+.atrium-menu-separator {
+  height: 1px;
+  background: var(--atrium-bg-transparent-08);
+  margin: 4px 0;
+}
+
+@keyframes atrium-menu-in {
+  0% { opacity: 0; transform: scale(0.85) translateY(-12px); filter: blur(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); pointer-events: all; }
+}
+
+@keyframes atrium-menu-out {
+  0% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); }
+  100% { opacity: 0; transform: scale(0.85) translateY(-12px); filter: blur(8px); pointer-events: none; }
+}
+
+/* ---------- Motion modes ---------- */
+
+[data-atrium-motion='reduced'] .atrium-menu.is-open {
+  filter: none !important;
+  animation: atrium-menu-in-reduced 0.15s ease forwards !important;
+}
+
+[data-atrium-motion='reduced'] .atrium-menu.is-closing {
+  animation: atrium-menu-out-reduced 0.1s ease forwards !important;
+}
+
+@keyframes atrium-menu-in-reduced {
+  0% { opacity: 0; transform: translateY(-5px); }
+  100% { opacity: 1; transform: translateY(0); pointer-events: all; }
+}
+
+@keyframes atrium-menu-out-reduced {
+  0% { opacity: 1; }
+  100% { opacity: 0; pointer-events: none; }
+}
+
+[data-atrium-motion='none'] .atrium-menu.is-open {
+  animation: none !important;
+  opacity: 1;
+  transform: none;
+  filter: none;
+  pointer-events: all;
+}

@@ -1,0 +1,213 @@
+/*
+ * Shared keyframes and entrance utilities, ported from MOSAIC's animations/*.css.
+ * Component-specific keyframes (modal, toast) live next to their component.
+ */
+
+/* ---------- Entrance utilities ---------- */
+/* Usage: <div class="atrium-enter-slide-up" style="--atrium-delay: 0.2s"> */
+
+/*
+ * `backwards` keeps the element hidden (first keyframe) during the delay, then
+ * releases it when the animation ends. `forwards` would pin opacity/transform
+ * afterwards and silently disable hover effects such as .atrium-tile-btn's grow.
+ */
+.atrium-enter-fade,
+.atrium-enter-slide-up,
+.atrium-enter-slide-down,
+.atrium-enter-slide-right,
+.atrium-enter-scale,
+.atrium-enter-pop,
+.atrium-enter-list {
+  animation-fill-mode: backwards;
+  animation-delay: var(--atrium-delay, 0s);
+}
+
+.atrium-enter-fade {
+  animation-name: atrium-fade-in;
+  animation-duration: 0.8s;
+  animation-timing-function: var(--atrium-ease-out-soft);
+}
+
+.atrium-enter-slide-up {
+  animation-name: atrium-slide-up;
+  animation-duration: 0.8s;
+  animation-timing-function: var(--atrium-ease-out-soft);
+}
+
+.atrium-enter-slide-down {
+  animation-name: atrium-slide-down;
+  animation-duration: 0.8s;
+  animation-timing-function: var(--atrium-ease-out-soft);
+}
+
+/* MOSAIC sidebar buttons */
+.atrium-enter-slide-right {
+  animation-name: atrium-slide-right;
+  animation-duration: 1.8s;
+  animation-timing-function: var(--atrium-ease-out-soft);
+}
+
+.atrium-enter-scale {
+  animation-name: atrium-scale-in;
+  animation-duration: 0.8s;
+  animation-timing-function: var(--atrium-ease-out-soft);
+}
+
+/* MOSAIC action buttons */
+.atrium-enter-pop {
+  animation-name: atrium-pop-in;
+  animation-duration: 0.6s;
+  animation-timing-function: var(--atrium-ease-back);
+}
+
+/* MOSAIC mod list items; pair with stagger() to set --atrium-index */
+.atrium-enter-list {
+  animation-name: atrium-list-item-in;
+  animation-duration: 0.7s;
+  animation-timing-function: var(--atrium-ease-out-soft);
+  animation-delay: calc(
+    var(--atrium-delay, 0s) + var(--atrium-index, 0) * var(--atrium-stagger, 0.08s)
+  );
+}
+
+/* ---------- Feedback utilities ---------- */
+
+.atrium-shake {
+  animation: atrium-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* For elements centred with translate(-50%, -50%), e.g. modals */
+.atrium-shake-centered {
+  animation: atrium-shake-centered 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.atrium-bounce {
+  animation: atrium-bounce 0.6s var(--atrium-ease-out-quint) forwards;
+  transform-origin: center bottom;
+}
+
+/* ---------- Hover lift (MOSAIC action/input buttons) ---------- */
+
+.atrium-lift {
+  transition: all 0.2s var(--atrium-ease-standard);
+}
+
+.atrium-lift:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--atrium-shadow-lg);
+}
+
+.atrium-lift:active {
+  transform: translateY(0) scale(1);
+  transition: all 0.1s ease;
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes atrium-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes atrium-slide-up {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes atrium-slide-down {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes atrium-slide-right {
+  0% { opacity: 0; transform: translateX(-30px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes atrium-scale-in {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes atrium-pop-in {
+  0% { opacity: 0; transform: scale(0.8) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes atrium-list-item-in {
+  0% { opacity: 0; transform: translateY(18px) scale(0.985); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes atrium-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes atrium-shake-centered {
+  0%, 100% { transform: translate(-50%, -50%); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-50%, -50%) translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translate(-50%, -50%) translateX(5px); }
+}
+
+@keyframes atrium-bounce {
+  0% { transform: scaleX(1) scaleY(1); }
+  15% { transform: scaleX(1.03) scaleY(1.15); }
+  30% { transform: scaleX(1.01) scaleY(0.92); }
+  45% { transform: scaleX(1.015) scaleY(1.06); }
+  60% { transform: scaleX(1.005) scaleY(0.97); }
+  75% { transform: scaleX(1.005) scaleY(1.02); }
+  100% { transform: scaleX(1) scaleY(1); }
+}
+
+/* ---------- Motion modes (MOSAIC's "reduced" / "no animations" settings) ---------- */
+/* Set with atrium.setMotion('full' | 'reduced' | 'none'). */
+
+[data-atrium-motion='reduced'] *,
+[data-atrium-motion='reduced'] *::before,
+[data-atrium-motion='reduced'] *::after {
+  animation-duration: 0.15s !important;
+  transition-duration: 0.15s !important;
+  scroll-behavior: auto !important;
+}
+
+[data-atrium-motion='none'] *,
+[data-atrium-motion='none'] *::before,
+[data-atrium-motion='none'] *::after {
+  animation-duration: 0.1s !important;
+  transition-duration: 0.1s !important;
+  scroll-behavior: auto !important;
+}
+
+/* Spinners keep their normal speed */
+[data-atrium-motion] .atrium-spin,
+[data-atrium-motion] .atrium-loading > i {
+  animation-duration: 1s !important;
+}
+
+[data-atrium-motion='reduced'] .atrium-lift:hover,
+[data-atrium-motion='reduced'] .atrium-lift:active,
+[data-atrium-motion='none'] .atrium-lift:hover,
+[data-atrium-motion='none'] .atrium-lift:active {
+  transform: none !important;
+}
+
+[data-atrium-motion='none'] .atrium-enter-fade,
+[data-atrium-motion='none'] .atrium-enter-slide-up,
+[data-atrium-motion='none'] .atrium-enter-slide-down,
+[data-atrium-motion='none'] .atrium-enter-slide-right,
+[data-atrium-motion='none'] .atrium-enter-scale,
+[data-atrium-motion='none'] .atrium-enter-pop,
+[data-atrium-motion='none'] .atrium-enter-list {
+  animation: none !important;
+}
+
+.atrium-spin {
+  display: inline-block;
+  animation: atrium-spin 1s linear infinite;
+}
+
+@keyframes atrium-spin {
+  to { transform: rotate(360deg); }
+}

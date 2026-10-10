@@ -1,0 +1,474 @@
+/*
+ * Feedback elements from MOSAIC.
+ *
+ *   MOSAIC                         -> Atrium-UI
+ *   .download-progress-bar/-fill   -> .atrium-progress > .atrium-progress-fill  (shimmering)
+ *   .download-progress-indeterminate -> .atrium-progress.is-indeterminate
+ *   .ext-progress-container/-fill  -> .atrium-progress.is-thin
+ *   .download-progress-details     -> .atrium-progress-meta (+ -text / -speed)
+ *   .social-loading                -> .atrium-loading
+ *   .social-gamebanana-skeleton-*  -> .atrium-skeleton (+ -line / -pill / -circle)
+ *   .downloads-empty, .characters-empty-state, .stages-empty-state
+ *                                  -> .atrium-empty (+ .is-compact / .is-boxed / .is-error)
+ *   .conflict-header-badge, .smart-rename-status-badge, .social-mod-badge
+ *                                  -> .atrium-badge (+ tones, .is-solid / .is-caps)
+ *   .plugin-status                 -> .atrium-dot (+ .is-active / .is-off)
+ *   .status-item                   -> .atrium-status-item
+ *   .tutorial-progress-dot         -> .atrium-steps > .atrium-step
+ */
+
+/* ===================== Progress ===================== */
+
+.atrium-progress {
+  --_progress: 0%;
+  width: 100%;
+  height: 10px;
+  background-color: rgba(26, 26, 26, 0.8);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* <div class="atrium-progress" style="--atrium-progress: 64%"><div class="atrium-progress-fill"></div></div> */
+.atrium-progress-fill {
+  width: var(--atrium-progress, var(--_progress));
+  height: 100%;
+  background: linear-gradient(90deg, var(--atrium-accent-color) 0%, var(--atrium-accent-hover) 50%, var(--atrium-accent-color) 100%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  transition: width 0.4s var(--atrium-ease-standard);
+  animation: atrium-progress-shimmer 2s linear infinite;
+  box-shadow: 0 0 10px rgba(var(--atrium-accent-rgb), 0.4);
+}
+
+.atrium-progress.is-indeterminate .atrium-progress-fill {
+  width: 34%;
+  min-width: 80px;
+  animation:
+    atrium-progress-shimmer 2s linear infinite,
+    atrium-progress-indeterminate 1.1s ease-in-out infinite;
+}
+
+.atrium-progress.is-success .atrium-progress-fill {
+  background: var(--atrium-success-color);
+  box-shadow: 0 0 10px rgba(var(--atrium-success-rgb), 0.4);
+  animation: none;
+}
+
+.atrium-progress.is-error .atrium-progress-fill {
+  background: var(--atrium-danger-color);
+  box-shadow: 0 0 10px rgba(var(--atrium-danger-rgb), 0.4);
+  animation: none;
+}
+
+/* Thin variant (MOSAIC's island progress) with a passing glare */
+.atrium-progress.is-thin {
+  height: 6px;
+  background: rgba(var(--atrium-accent-rgb), 0.08);
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+.atrium-progress.is-thin .atrium-progress-fill {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--atrium-accent-color), var(--atrium-accent-hover));
+  border-radius: 4px;
+  box-shadow: none;
+  animation: none;
+  transition: width 0.22s ease;
+}
+
+.atrium-progress.is-thin .atrium-progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.26), transparent);
+  transform: translateX(-100%);
+  animation: atrium-progress-glare 1.5s linear infinite;
+  pointer-events: none;
+}
+
+.atrium-progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.atrium-progress-text,
+.atrium-progress-speed {
+  font-size: 12px;
+  color: var(--atrium-text-muted);
+  font-weight: 600;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.atrium-progress-speed {
+  color: var(--atrium-accent-color);
+  white-space: nowrap;
+}
+
+@keyframes atrium-progress-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes atrium-progress-indeterminate {
+  0% { transform: translateX(-115%); }
+  100% { transform: translateX(315%); }
+}
+
+@keyframes atrium-progress-glare {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ===================== Loading ===================== */
+/* <div class="atrium-loading"><i class="bi bi-arrow-repeat"></i><p>Loading mods…</p></div> */
+
+.atrium-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--atrium-text-muted);
+  gap: 16px;
+  text-align: center;
+}
+
+.atrium-loading > i {
+  font-size: 48px;
+  color: var(--atrium-accent-color);
+  animation: atrium-spin 1s linear infinite;
+}
+
+.atrium-loading > p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.atrium-loading.is-inline {
+  flex-direction: row;
+  padding: 0;
+  gap: 8px;
+}
+
+.atrium-loading.is-inline > i {
+  font-size: 16px;
+}
+
+.atrium-loading.is-inline > p {
+  font-size: 14px;
+}
+
+/* ===================== Skeleton ===================== */
+/* <span class="atrium-skeleton atrium-skeleton-line" style="width: 60%"></span> */
+
+.atrium-skeleton {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 7px;
+  background: var(--atrium-bg-card);
+}
+
+.atrium-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent 0%, var(--atrium-bg-hover) 48%, transparent 100%);
+  opacity: 0.7;
+  animation: atrium-skeleton-shimmer 1.35s ease-in-out infinite;
+}
+
+.atrium-skeleton-line { width: 100%; height: 14px; }
+.atrium-skeleton-title { width: min(420px, 86%); height: 36px; }
+.atrium-skeleton-pill { width: 72px; height: 14px; border-radius: 999px; }
+.atrium-skeleton-circle { width: 40px; height: 40px; border-radius: 50%; }
+.atrium-skeleton-block { width: 100%; height: 120px; border-radius: 10px; }
+
+.atrium-skeleton-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+@keyframes atrium-skeleton-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* ===================== Empty state ===================== */
+/*
+ * <div class="atrium-empty">
+ *   <i class="bi bi-inbox"></i><h3>No downloads</h3><p>Mods you download will show up here.</p>
+ * </div>
+ */
+
+.atrium-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-align: center;
+  padding: 60px 20px;
+  font-family: var(--atrium-font-family);
+}
+
+.atrium-empty > i {
+  font-size: 64px;
+  color: var(--atrium-text-primary);
+  opacity: 0.3;
+  margin-bottom: 24px;
+}
+
+.atrium-empty > h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--atrium-text-primary);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.5px;
+}
+
+.atrium-empty > p {
+  font-size: 15px;
+  color: var(--atrium-text-muted);
+  margin: 0;
+  line-height: 1.6;
+  max-width: 48ch;
+}
+
+.atrium-empty > .atrium-btn,
+.atrium-empty > .atrium-settings-btn {
+  margin-top: 20px;
+}
+
+/* MOSAIC .characters-empty-state: accent icon, tighter */
+.atrium-empty.is-compact {
+  gap: 16px;
+}
+
+.atrium-empty.is-compact > i {
+  color: var(--atrium-accent-color);
+  opacity: 0.5;
+  margin-bottom: 0;
+}
+
+.atrium-empty.is-compact > h3 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: normal;
+  margin: 0;
+}
+
+.atrium-empty.is-compact > p {
+  font-size: 14px;
+}
+
+/* MOSAIC .stages-empty-state: dashed box */
+.atrium-empty.is-boxed {
+  padding: 54px 20px;
+  color: var(--atrium-text-muted);
+  border: 1px dashed var(--atrium-bg-transparent-10);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.atrium-empty.is-error {
+  color: var(--atrium-danger-color);
+  border-color: rgba(var(--atrium-danger-rgb), 0.28);
+  background: rgba(var(--atrium-danger-rgb), 0.08);
+}
+
+.atrium-empty.is-error > i {
+  color: var(--atrium-danger-color);
+  opacity: 0.8;
+}
+
+/* ===================== Badges ===================== */
+
+/* Soft badge (MOSAIC .social-mod-badge) */
+.atrium-badge {
+  --_rgb: var(--atrium-accent-rgb);
+  --_color: var(--atrium-accent-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(var(--_rgb), 0.2);
+  border: 1px solid rgba(var(--_rgb), 0.3);
+  border-radius: 12px;
+  color: var(--_color);
+  font-family: var(--atrium-font-family);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.atrium-badge-success { --_rgb: var(--atrium-success-rgb); --_color: var(--atrium-success-color); }
+.atrium-badge-warning { --_rgb: var(--atrium-warning-rgb); --_color: var(--atrium-warning-color); }
+.atrium-badge-danger { --_rgb: var(--atrium-danger-rgb); --_color: var(--atrium-danger-color); }
+.atrium-badge-neutral { --_rgb: 156, 163, 175; --_color: #9ca3af; }
+
+/* Solid badge (MOSAIC .conflict-header-badge) */
+.atrium-badge.is-solid {
+  padding: 4px 12px;
+  border: none;
+  background: rgba(var(--_rgb), 0.95);
+  color: var(--atrium-text-inverse);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(var(--_rgb), 0.3);
+}
+
+.atrium-badge-danger.is-solid { --_rgb: 255, 107, 107; }
+
+/* Uppercase status badge (MOSAIC .smart-rename-status-badge) */
+.atrium-badge.is-caps {
+  padding: 3px 10px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(var(--_rgb), 0.15);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.atrium-badge-success.is-caps { --_rgb: 34, 197, 94; --_color: #22c55e; }
+
+/* ===================== Status dot (MOSAIC .plugin-status) ===================== */
+
+.atrium-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: var(--atrium-text-muted);
+}
+
+.atrium-dot.is-active {
+  background-color: var(--atrium-success-color);
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+}
+
+.atrium-dot.is-warning {
+  background-color: var(--atrium-warning-color);
+  box-shadow: 0 0 8px rgba(var(--atrium-warning-rgb), 0.5);
+}
+
+.atrium-dot.is-error {
+  background-color: var(--atrium-danger-color);
+  box-shadow: 0 0 8px rgba(var(--atrium-danger-rgb), 0.5);
+}
+
+/* ===================== Status item (MOSAIC .status-item) ===================== */
+/* <div class="atrium-status-item is-success"><span class="atrium-status-icon"><i class="bi bi-check"></i></span>Ready</div> */
+
+.atrium-status-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 45px;
+  border-radius: 6px;
+  padding: 0 12px;
+  position: relative;
+  background-color: var(--atrium-border-color);
+  border: 1px solid var(--atrium-border-hover);
+  color: var(--atrium-text-primary);
+  font-family: var(--atrium-font-family);
+}
+
+.atrium-status-item.is-success {
+  background-color: rgba(var(--atrium-success-rgb), 0.2);
+  border-color: rgba(var(--atrium-success-rgb), 0.4);
+}
+
+.atrium-status-item.is-warning {
+  background-color: rgba(var(--atrium-warning-rgb), 0.2);
+  border-color: rgba(var(--atrium-warning-rgb), 0.4);
+}
+
+.atrium-status-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--atrium-text-primary);
+  background-color: var(--atrium-bg-transparent-15);
+}
+
+/* ===================== Steps (MOSAIC .tutorial-progress-dot) ===================== */
+/* <div class="atrium-steps"><button class="atrium-step is-done"></button><button class="atrium-step is-active"></button>…</div> */
+
+.atrium-steps {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.atrium-step {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.atrium-step:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.2);
+}
+
+.atrium-step.is-active {
+  width: 32px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #7a9bff, #5f7fff);
+  box-shadow: 0 0 12px rgba(122, 155, 255, 0.5);
+}
+
+.atrium-step.is-done {
+  background: #4caf50;
+}
+
+.atrium-step:focus-visible {
+  outline: 2px solid var(--atrium-accent-color);
+  outline-offset: 3px;
+}
+
+[data-atrium-theme='light'] .atrium-step:not(.is-active, .is-done) {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* ===================== Motion modes ===================== */
+
+[data-atrium-motion='reduced'] .atrium-progress.is-thin .atrium-progress-fill::after {
+  animation-duration: 0.18s !important;
+}
+
+[data-atrium-motion='none'] :is(.atrium-progress-fill, .atrium-progress-fill::after, .atrium-skeleton::after, .atrium-step) {
+  animation: none !important;
+  transition: none !important;
+}
+
+[data-atrium-motion='none'] .atrium-progress.is-indeterminate .atrium-progress-fill {
+  width: 100%;
+  opacity: 0.6;
+}

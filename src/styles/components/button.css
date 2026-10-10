@@ -1,0 +1,949 @@
+/*
+ * Every button family from MOSAIC, with the cascade already resolved:
+ * - MOSAIC never sets font-family on buttons, so they render in Chromium's
+ *   control font (Arial 13.33px) -> var(--atrium-font-control).
+ * - animations/base.css overrides the hover/active transforms of .action-btn
+ *   and .input-btn, and performance.css forces transition-duration: 0.2s on
+ *   .action-btn, .input-btn, .modal-btn, .settings-btn and .sidebar-btn.
+ *
+ *   MOSAIC                     -> Atrium-UI
+ *   .modal-btn(-primary|...)   -> .atrium-btn(-primary|-danger|-cancel|-secondary)
+ *   .input-btn                 -> .atrium-input-btn
+ *   .settings-btn              -> .atrium-settings-btn
+ *   .settings-btn-action       -> .atrium-action-card
+ *   .settings-tab-btn          -> .atrium-tab-btn
+ *   .action-btn                -> .atrium-tile-btn (tooltip: see tooltip.css)
+ *   .action-btn-small          -> .atrium-icon-btn-sm
+ *   .download-action-btn       -> .atrium-icon-btn
+ *   .logs-action-btn           -> .atrium-tool-btn
+ *   .logs-filter-btn           -> .atrium-filter-btn
+ *   .smart-rename-filter-btn   -> .atrium-chip-btn
+ *   .social-btn(-primary|...)  -> .atrium-block-btn(-primary|-secondary|-danger|-success)
+ *   .social-btn-link           -> .atrium-link-btn
+ *   .social-compact-action-btn -> .atrium-compact-btn (+ .is-icon)
+ *   .tutorial-btn(-primary|...)-> .atrium-cta-btn(-primary|-secondary|-ghost)
+ *   .titlebar-btn              -> .atrium-titlebar-btn (+ .is-close)
+ *   .sidebar-btn               -> .atrium-sidebar-btn (+ .is-active)
+ */
+
+:where(
+    .atrium-btn,
+    .atrium-input-btn,
+    .atrium-settings-btn,
+    .atrium-action-card,
+    .atrium-tab-btn,
+    .atrium-tile-btn,
+    .atrium-icon-btn-sm,
+    .atrium-icon-btn,
+    .atrium-tool-btn,
+    .atrium-filter-btn,
+    .atrium-chip-btn,
+    .atrium-block-btn,
+    .atrium-link-btn,
+    .atrium-compact-btn,
+    .atrium-cta-btn,
+    .atrium-titlebar-btn,
+    .atrium-sidebar-btn
+  ) {
+  font-family: var(--atrium-font-control);
+  font-size: 13.3333px;
+  line-height: normal;
+}
+
+/* ===================== .atrium-btn (MOSAIC .modal-btn) ===================== */
+
+.atrium-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--atrium-text-primary);
+}
+
+/* Icon + label (MOSAIC adds this per modal; built in here) */
+.atrium-btn:has(> i) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.atrium-btn:disabled,
+.atrium-btn.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.atrium-btn-cancel {
+  background: var(--atrium-bg-hover);
+  border-color: var(--atrium-bg-transparent-10);
+  color: var(--atrium-text-primary);
+}
+
+.atrium-btn-cancel:hover {
+  background: var(--atrium-bg-transparent-10);
+  border-color: var(--atrium-bg-transparent-20);
+}
+
+.atrium-btn-primary {
+  background: var(--atrium-accent-color);
+  color: var(--atrium-text-inverse);
+  border: none;
+}
+
+.atrium-btn-primary:hover {
+  background: var(--atrium-accent-hover);
+  box-shadow: 0 4px 12px rgba(var(--atrium-accent-rgb), 0.3);
+  transform: translateY(-2px);
+  color: var(--atrium-text-inverse);
+}
+
+.atrium-btn-danger {
+  background: var(--atrium-danger-color);
+  color: var(--atrium-text-inverse);
+  border: none;
+}
+
+.atrium-btn-danger:hover {
+  background: var(--atrium-danger-hover);
+  box-shadow: 0 4px 12px rgba(var(--atrium-danger-rgb), 0.3);
+  transform: translateY(-2px);
+  color: var(--atrium-text-inverse);
+}
+
+/* MOSAIC only styles .modal-btn-secondary inside the mod info editor */
+.atrium-btn-secondary {
+  background-color: var(--atrium-border-hover);
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--atrium-text-primary);
+}
+
+/* ===================== .atrium-input-btn (MOSAIC .input-btn) ===================== */
+
+.atrium-input-btn {
+  background-color: var(--atrium-border-hover);
+  border: 1px solid var(--atrium-border-hover);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--atrium-text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s var(--atrium-ease-standard);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.atrium-input-btn i {
+  font-size: 16px;
+}
+
+.atrium-input-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--atrium-shadow-md);
+}
+
+.atrium-input-btn:active {
+  background-color: var(--atrium-border-color);
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+/* ===================== .atrium-settings-btn (MOSAIC .settings-btn) ===================== */
+
+.atrium-settings-btn {
+  background: var(--atrium-bg-hover);
+  border: 1px solid var(--atrium-border-hover);
+  border-radius: 8px;
+  padding: 12px 24px;
+  color: var(--atrium-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s var(--atrium-ease-standard);
+}
+
+.atrium-settings-btn:has(> i) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.atrium-settings-btn:hover {
+  background: var(--atrium-bg-tertiary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.atrium-settings-btn:active {
+  transform: translateY(0);
+}
+
+.atrium-settings-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ===================== .atrium-action-card (MOSAIC .settings-btn-action) ===================== */
+/*
+ * <button class="atrium-action-card">
+ *   <i class="bi bi-cloud-download"></i>
+ *   <span class="atrium-action-card-content">
+ *     <span class="atrium-action-card-title">Title</span>
+ *     <span class="atrium-action-card-desc">Description</span>
+ *   </span>
+ *   <i class="bi bi-chevron-right"></i>
+ * </button>
+ */
+
+.atrium-action-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--atrium-bg-accent-subtle);
+  border: 2px solid rgba(var(--atrium-accent-rgb), 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s var(--atrium-ease-standard);
+  width: 100%;
+  text-align: left;
+}
+
+.atrium-action-card:hover {
+  background: rgba(var(--atrium-accent-rgb), 0.15);
+  border-color: rgba(var(--atrium-accent-rgb), 0.4);
+  transform: translateX(4px);
+}
+
+.atrium-action-card + .atrium-action-card {
+  margin-top: 12px;
+}
+
+.atrium-action-card:disabled {
+  cursor: not-allowed;
+  transform: none;
+}
+
+.atrium-action-card i:first-child {
+  font-size: 24px;
+  color: var(--atrium-accent-color);
+  flex-shrink: 0;
+}
+
+.atrium-action-card i:last-child {
+  font-size: 20px;
+  color: var(--atrium-accent-color);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.atrium-action-card:hover i:last-child {
+  transform: translateX(4px);
+}
+
+.atrium-action-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.atrium-action-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--atrium-text-primary);
+}
+
+.atrium-action-card-desc {
+  font-size: 13px;
+  color: var(--atrium-text-muted);
+}
+
+.atrium-action-card-danger {
+  background: rgba(255, 90, 90, 0.08);
+  border-color: rgba(255, 90, 90, 0.24);
+}
+
+.atrium-action-card-danger:hover {
+  background: rgba(255, 90, 90, 0.14);
+  border-color: rgba(255, 90, 90, 0.42);
+}
+
+.atrium-action-card-danger i:first-child,
+.atrium-action-card-danger i:last-child {
+  color: var(--atrium-danger-color);
+}
+
+/* ===================== .atrium-tab-btn (MOSAIC .settings-tab-btn) ===================== */
+
+.atrium-tab-btn {
+  background: transparent;
+  border: none;
+  padding: 12px 22px;
+  color: var(--atrium-text-muted);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s var(--atrium-ease-standard);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.atrium-tab-btn i {
+  font-size: 18px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.atrium-tab-btn:hover {
+  color: var(--atrium-text-primary);
+  background: var(--atrium-bg-hover);
+}
+
+.atrium-tab-btn.is-active {
+  color: var(--atrium-accent-color);
+  background: var(--atrium-bg-accent-subtle);
+}
+
+.atrium-tab-btn.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: linear-gradient(180deg, var(--atrium-accent-color) 0%, var(--atrium-accent-hover) 100%);
+  border-radius: 0 3px 3px 0;
+}
+
+/* ===================== .atrium-tile-btn (MOSAIC .action-btn) ===================== */
+/*
+ * Every dimension is a CSS variable, settable on the tile, a parent or :root:
+ *   --atrium-tile-size (square tiles), --atrium-tile-width / --atrium-tile-height,
+ *   --atrium-tile-icon, --atrium-tile-label, --atrium-tile-radius, --atrium-tile-hover-scale
+ *   <button class="atrium-tile-btn" style="--atrium-tile-size: 80px; --atrium-tile-icon: 40px">
+ * Defaults (the private --_tile-* values) are MOSAIC's: 60px tile, 32px icon, 20% radius.
+ */
+
+.atrium-tile-btn {
+  --_tile-size: 60px;
+  --_tile-icon: 32px;
+  --_tile-label: 13px;
+  --_tile-radius: 20%;
+  --_tile-hover-scale: 1.05;
+  width: var(--atrium-tile-width, var(--atrium-tile-size, var(--_tile-size)));
+  height: var(--atrium-tile-height, var(--atrium-tile-size, var(--_tile-size)));
+  background-color: var(--atrium-border-color);
+  border: 1px solid var(--atrium-border-hover);
+  border-radius: var(--atrium-tile-radius, var(--_tile-radius));
+  color: var(--atrium-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s var(--atrium-ease-standard);
+}
+
+.atrium-tile-btn svg,
+.atrium-tile-btn img {
+  width: 70%;
+  height: 70%;
+}
+
+.atrium-tile-btn i {
+  font-size: var(--atrium-tile-icon, var(--_tile-icon));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.atrium-tile-btn:hover {
+  background-color: var(--atrium-border-hover);
+  color: var(--atrium-text-primary);
+  transform: translateY(-2px) scale(var(--atrium-tile-hover-scale, var(--_tile-hover-scale)));
+  box-shadow: var(--atrium-shadow-lg);
+}
+
+.atrium-tile-btn:active {
+  transform: translateY(0) scale(1);
+  background-color: var(--atrium-bg-primary);
+  transition: all 0.2s ease;
+}
+
+.atrium-tile-btn:focus-visible {
+  outline: 2px solid var(--atrium-accent-color);
+  outline-offset: 2px;
+}
+
+.atrium-tile-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/*
+ * Labelled tiles (Atrium addition, same material and hover as .action-btn):
+ * <button class="atrium-tile-btn is-large"><i class="bi bi-play-fill"></i><span>Launch</span></button>
+ * Sizes: .is-large (96px) and .is-xl (128px), or set the variables yourself.
+ */
+.atrium-tile-btn.is-large,
+.atrium-tile-btn.is-xl {
+  --_tile-icon: 28px;
+  --_tile-label: 13px;
+  --_tile-radius: 16px;
+  --_tile-min-width: 112px;
+  --_tile-height: 96px;
+  width: auto;
+  min-width: var(--atrium-tile-width, var(--_tile-min-width));
+  height: var(--atrium-tile-height, var(--_tile-height));
+  padding: 14px 20px;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.atrium-tile-btn.is-xl {
+  --_tile-icon: 40px;
+  --_tile-label: 15px;
+  --_tile-radius: 20px;
+  --_tile-hover-scale: 1.04;
+  --_tile-min-width: 152px;
+  --_tile-height: 128px;
+  padding: 18px 24px;
+  gap: 12px;
+}
+
+.atrium-tile-btn.is-large span,
+.atrium-tile-btn.is-xl span {
+  font-size: var(--atrium-tile-label, var(--_tile-label));
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* ===================== .atrium-icon-btn-sm (MOSAIC .action-btn-small) ===================== */
+
+.atrium-icon-btn-sm {
+  width: 32px;
+  height: 32px;
+  background-color: var(--atrium-border-color);
+  border: 1px solid var(--atrium-border-hover);
+  border-radius: 6px;
+  color: var(--atrium-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.atrium-icon-btn-sm i {
+  font-size: 16px;
+}
+
+.atrium-icon-btn-sm:hover {
+  background-color: var(--atrium-border-hover);
+  border-color: var(--atrium-text-muted);
+  color: var(--atrium-text-primary);
+}
+
+.atrium-icon-btn-sm.atrium-tone-accent:hover {
+  color: var(--atrium-accent-color);
+  border-color: rgba(var(--atrium-accent-rgb), 0.3);
+}
+
+.atrium-icon-btn-sm.atrium-tone-danger:hover {
+  color: var(--atrium-danger-color);
+  border-color: rgba(var(--atrium-danger-rgb), 0.3);
+}
+
+/* ===================== .atrium-icon-btn (MOSAIC .download-action-btn) ===================== */
+
+.atrium-icon-btn {
+  background: var(--atrium-bg-hover);
+  border: 1px solid var(--atrium-bg-transparent-10);
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--atrium-text-muted);
+}
+
+.atrium-icon-btn i {
+  font-size: 16px;
+}
+
+.atrium-icon-btn:hover {
+  background: var(--atrium-bg-transparent-10);
+  border-color: var(--atrium-bg-transparent-20);
+  color: var(--atrium-text-primary);
+  transform: scale(1.1);
+}
+
+.atrium-icon-btn:active {
+  transform: scale(0.95);
+}
+
+.atrium-icon-btn.atrium-tone-warning:hover {
+  color: var(--atrium-warning-color);
+  border-color: rgba(var(--atrium-warning-rgb), 0.3);
+}
+
+.atrium-icon-btn.atrium-tone-success:hover {
+  color: var(--atrium-success-color);
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.atrium-icon-btn.atrium-tone-danger:hover {
+  color: var(--atrium-danger-color);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.atrium-icon-btn.atrium-tone-accent:hover {
+  color: var(--atrium-accent-color);
+  border-color: rgba(var(--atrium-accent-rgb), 0.3);
+}
+
+/* ===================== .atrium-tool-btn (MOSAIC .logs-action-btn) ===================== */
+
+.atrium-tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--atrium-bg-transparent-05);
+  border: 1px solid var(--atrium-bg-transparent-08);
+  border-radius: 8px;
+  color: var(--atrium-text-muted);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s var(--atrium-ease-standard);
+}
+
+.atrium-tool-btn:hover {
+  background: rgba(var(--atrium-accent-rgb), 0.15);
+  color: var(--atrium-accent-color);
+  border-color: rgba(var(--atrium-accent-rgb), 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(var(--atrium-accent-rgb), 0.2);
+}
+
+.atrium-tool-btn.is-active {
+  background: rgba(var(--atrium-accent-rgb), 0.18);
+  color: var(--atrium-accent-color);
+  border-color: rgba(var(--atrium-accent-rgb), 0.45);
+}
+
+/* ===================== .atrium-filter-btn (MOSAIC .logs-filter-btn) ===================== */
+
+.atrium-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--atrium-bg-transparent-05);
+  border: 1px solid var(--atrium-bg-transparent-08);
+  border-radius: 8px;
+  color: var(--atrium-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s var(--atrium-ease-standard);
+}
+
+.atrium-filter-btn:hover {
+  background: var(--atrium-bg-transparent-08);
+  border-color: rgba(var(--atrium-accent-rgb), 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(var(--atrium-accent-rgb), 0.15);
+}
+
+.atrium-filter-btn.is-active {
+  background: linear-gradient(135deg, var(--atrium-accent-color) 0%, var(--atrium-accent-hover) 100%);
+  border-color: rgba(var(--atrium-accent-rgb), 0.5);
+  color: var(--atrium-text-primary);
+  box-shadow: 0 4px 16px rgba(var(--atrium-accent-rgb), 0.3);
+}
+
+/* ===================== .atrium-chip-btn (MOSAIC .smart-rename-filter-btn) ===================== */
+
+.atrium-chip-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--atrium-border-hover);
+  background: var(--atrium-bg-hover);
+  color: var(--atrium-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.atrium-chip-btn:hover,
+.atrium-chip-btn.is-active {
+  background: var(--atrium-bg-transparent-10);
+  border-color: var(--atrium-accent-color);
+  color: var(--atrium-accent-color);
+}
+
+/* ===================== .atrium-block-btn (MOSAIC .social-btn) ===================== */
+
+.atrium-block-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--atrium-border-hover);
+  cursor: pointer;
+  background: var(--atrium-bg-primary);
+  color: var(--atrium-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.atrium-block-btn:hover {
+  background: var(--atrium-bg-item-hover-alt);
+  border-color: var(--atrium-border-hover);
+}
+
+.atrium-block-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.atrium-block-btn-primary {
+  background: linear-gradient(135deg, var(--atrium-accent-color) 0%, var(--atrium-accent-hover) 100%);
+  border-color: var(--atrium-accent-hover);
+  color: var(--atrium-text-inverse);
+}
+
+.atrium-block-btn-primary:hover {
+  background: linear-gradient(135deg, var(--atrium-accent-hover) 0%, var(--atrium-accent-color) 100%);
+  box-shadow: 0 4px 12px rgba(var(--atrium-accent-rgb), 0.3);
+  color: var(--atrium-text-inverse);
+}
+
+.atrium-block-btn-secondary {
+  background: var(--atrium-bg-transparent-10);
+  border-color: var(--atrium-bg-transparent-20);
+  color: var(--atrium-text-primary);
+}
+
+.atrium-block-btn-secondary:hover {
+  background: var(--atrium-bg-transparent-15);
+  border-color: var(--atrium-bg-transparent-30);
+}
+
+.atrium-block-btn-danger {
+  background: rgba(var(--atrium-danger-rgb), 0.2);
+  border-color: rgba(var(--atrium-danger-rgb), 0.5);
+  color: var(--atrium-danger-color);
+}
+
+.atrium-block-btn-danger:hover {
+  background: rgba(var(--atrium-danger-rgb), 0.3);
+  border-color: rgba(var(--atrium-danger-rgb), 0.7);
+}
+
+.atrium-block-btn-success {
+  background: rgba(var(--atrium-success-rgb), 0.2);
+  border-color: rgba(var(--atrium-success-rgb), 0.5);
+  color: var(--atrium-success-color);
+}
+
+.atrium-block-btn-success:hover {
+  background: rgba(var(--atrium-success-rgb), 0.3);
+  border-color: rgba(var(--atrium-success-rgb), 0.7);
+}
+
+/* Inline width with lift, as in MOSAIC's profile actions */
+.atrium-block-btn.is-inline {
+  width: auto;
+  min-width: 140px;
+  padding: 10px 20px;
+  transition: all 0.3s var(--atrium-ease-standard);
+}
+
+.atrium-block-btn.is-inline:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(90, 90, 122, 0.3);
+}
+
+/* ===================== .atrium-link-btn (MOSAIC .social-btn-link) ===================== */
+
+.atrium-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--atrium-accent-color);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.atrium-link-btn:hover {
+  background: rgba(var(--atrium-accent-rgb), 0.15);
+  color: var(--atrium-accent-hover);
+}
+
+.atrium-link-btn i {
+  font-size: 14px;
+}
+
+/* ===================== .atrium-compact-btn (MOSAIC .social-compact-action-btn) ===================== */
+
+.atrium-compact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--atrium-bg-transparent-20);
+  border-radius: 8px;
+  background: var(--atrium-bg-transparent-10);
+  color: var(--atrium-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 0 0 auto;
+}
+
+/* MOSAIC .social-icon-action-btn */
+.atrium-compact-btn.is-icon {
+  width: 42px;
+  padding: 0;
+  font-size: 13.3333px;
+  font-weight: 400;
+}
+
+.atrium-compact-btn:hover {
+  background: var(--atrium-bg-transparent-15);
+  border-color: rgba(var(--atrium-accent-rgb), 0.4);
+  color: var(--atrium-accent-color);
+}
+
+.atrium-compact-btn:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.atrium-compact-btn:focus-visible {
+  outline: 2px solid var(--atrium-accent-color);
+  outline-offset: 2px;
+}
+
+/* ===================== .atrium-cta-btn (MOSAIC .tutorial-btn) ===================== */
+/* MOSAIC hard-codes these colours (the tutorial is always dark); kept as-is. */
+
+.atrium-cta-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.atrium-cta-btn i {
+  font-size: 14px;
+}
+
+.atrium-cta-btn-primary {
+  background: linear-gradient(135deg, #7a9bff, #5f7fff);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(122, 155, 255, 0.3);
+}
+
+.atrium-cta-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(122, 155, 255, 0.4);
+}
+
+.atrium-cta-btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.atrium-cta-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.atrium-cta-btn-ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.atrium-cta-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+/* ===================== .atrium-titlebar-btn (MOSAIC .titlebar-btn) ===================== */
+
+.atrium-titlebar-btn {
+  background: none;
+  border: none;
+  color: var(--atrium-text-secondary);
+  font-size: 16px;
+  width: 46px;
+  height: 36px;
+  cursor: pointer;
+  transition: all 0.2s var(--atrium-ease-standard);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.atrium-titlebar-btn svg {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s var(--atrium-ease-standard);
+}
+
+.atrium-titlebar-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--atrium-bg-hover);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.atrium-titlebar-btn:hover {
+  color: var(--atrium-text-primary);
+  background: var(--atrium-bg-transparent-08);
+}
+
+.atrium-titlebar-btn:hover::before {
+  opacity: 1;
+}
+
+.atrium-titlebar-btn:hover svg {
+  transform: scale(1.1);
+}
+
+.atrium-titlebar-btn:active {
+  transform: scale(0.95);
+}
+
+.atrium-titlebar-btn.is-close:hover {
+  background: linear-gradient(135deg, #e81123 0%, #c1001f 100%);
+  color: var(--atrium-text-primary);
+}
+
+.atrium-titlebar-btn.is-close:active {
+  background: linear-gradient(135deg, #c1001f 0%, #a10019 100%);
+}
+
+/* ===================== .atrium-sidebar-btn (MOSAIC .sidebar-btn) ===================== */
+
+.atrium-sidebar-btn {
+  width: 50px;
+  height: auto;
+  aspect-ratio: 1;
+  max-height: 8vh;
+  background: none;
+  border: none;
+  color: var(--atrium-text-secondary);
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  flex-shrink: 1;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.atrium-sidebar-btn svg,
+.atrium-sidebar-btn img {
+  width: 100%;
+  height: 100%;
+  filter: var(--atrium-icon-filter);
+  transition: opacity 0.18s ease;
+}
+
+.atrium-sidebar-btn i {
+  font-size: 24px;
+}
+
+.atrium-sidebar-btn:hover {
+  background-color: var(--atrium-bg-primary);
+  color: var(--atrium-text-primary);
+}
+
+.atrium-sidebar-btn.is-active {
+  background-color: var(--atrium-border-color);
+  color: var(--atrium-text-primary);
+}
+
+/* ===================== Motion modes ===================== */
+
+[data-atrium-motion='reduced'] .atrium-tile-btn:hover {
+  transform: none !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-atrium-motion='reduced'] .atrium-input-btn:hover {
+  transform: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-atrium-motion='reduced'] .atrium-tile-btn:active,
+[data-atrium-motion='reduced'] .atrium-input-btn:active {
+  transform: none !important;
+}
+
+[data-atrium-motion='none'] .atrium-icon-btn-sm,
+[data-atrium-motion='none'] .atrium-tab-btn {
+  transition: none !important;
+}

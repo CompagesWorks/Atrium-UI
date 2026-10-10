@@ -1,0 +1,113 @@
+/*
+ * Two tooltips, both from MOSAIC:
+ *
+ * 1. CSS-only (MOSAIC .action-btn-tooltip): short labels on a single element.
+ *    <button class="atrium-tooltip" data-tooltip="Launch" data-tooltip-position="bottom">
+ *    Positions: top (default), bottom, left, right. Clipped by overflow: hidden parents.
+ *
+ * 2. Floating (MOSAIC .conflict-ignore-tooltip), positioned by JS on <body>:
+ *    <button data-atrium-tooltip="Longer explanation" data-atrium-tooltip-position="right">
+ *    Never clipped, flips when there is no room, wraps up to 280px, shows on keyboard focus.
+ */
+
+/* ---------- 1. CSS-only ---------- */
+
+.atrium-tooltip {
+  position: relative;
+}
+
+.atrium-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--atrium-bg-tertiary);
+  color: var(--atrium-text-primary);
+  font-family: var(--atrium-font-family);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: normal;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+  border: 1px solid var(--atrium-border-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.atrium-tooltip:hover::after,
+.atrium-tooltip:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.atrium-tooltip[data-tooltip-position='bottom']::after {
+  bottom: auto;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.atrium-tooltip[data-tooltip-position='left']::after {
+  bottom: auto;
+  left: auto;
+  top: 50%;
+  right: calc(100% + 8px);
+  transform: translateY(-50%) translateX(4px);
+}
+
+.atrium-tooltip[data-tooltip-position='right']::after {
+  bottom: auto;
+  top: 50%;
+  left: calc(100% + 8px);
+  transform: translateY(-50%) translateX(-4px);
+}
+
+.atrium-tooltip[data-tooltip-position='bottom']:is(:hover, :focus-visible)::after {
+  transform: translateX(-50%) translateY(0);
+}
+
+.atrium-tooltip[data-tooltip-position='left']:is(:hover, :focus-visible)::after,
+.atrium-tooltip[data-tooltip-position='right']:is(:hover, :focus-visible)::after {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* ---------- 2. Floating ---------- */
+
+.atrium-floating-tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  max-width: 280px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--atrium-border-hover);
+  background: var(--atrium-bg-tertiary);
+  color: var(--atrium-text-primary);
+  font-family: var(--atrium-font-family);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(var(--_tip-dx, 0), var(--_tip-dy, 4px));
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+  z-index: 100000;
+}
+
+.atrium-floating-tooltip[data-placement='bottom'] { --_tip-dy: -4px; }
+.atrium-floating-tooltip[data-placement='left'] { --_tip-dx: 4px; --_tip-dy: 0; }
+.atrium-floating-tooltip[data-placement='right'] { --_tip-dx: -4px; --_tip-dy: 0; }
+
+.atrium-floating-tooltip.is-visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}

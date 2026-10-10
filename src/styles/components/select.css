@@ -1,0 +1,210 @@
+/* Ported from MOSAIC's .custom-select (content.css + modals.css open-up variant). */
+
+.atrium-select {
+  position: relative;
+  display: inline-block;
+  min-width: 150px;
+  background-color: var(--atrium-border-color);
+  border: 1px solid var(--atrium-border-hover);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s var(--atrium-ease-standard);
+  user-select: none;
+  font-family: var(--atrium-font-family);
+}
+
+.atrium-select:hover {
+  border-color: var(--atrium-border-hover);
+  background-color: var(--atrium-bg-item-hover-alt);
+}
+
+.atrium-select.is-open {
+  border-color: var(--atrium-accent-color);
+  box-shadow: 0 0 0 3px rgba(var(--atrium-accent-rgb), 0.15);
+}
+
+.atrium-select.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.atrium-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  border-radius: inherit;
+  cursor: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.atrium-select-trigger:focus-visible {
+  outline: 2px solid var(--atrium-accent-color);
+  outline-offset: 2px;
+}
+
+.atrium-select-value {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  color: var(--atrium-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.atrium-select-trigger > i {
+  color: var(--atrium-text-muted);
+  font-size: 12px;
+  transition: transform 0.3s var(--atrium-ease-standard);
+}
+
+.atrium-select.is-open .atrium-select-trigger > i {
+  transform: rotate(180deg);
+}
+
+.atrium-select-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, var(--atrium-border-color) 0%, var(--atrium-bg-tertiary) 100%);
+  border: 1px solid var(--atrium-border-hover);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 10001;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.3s var(--atrium-ease-standard);
+}
+
+.atrium-select.is-open .atrium-select-dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+/* Opens upward when there is no room below */
+.atrium-select.is-up .atrium-select-dropdown {
+  top: auto;
+  bottom: calc(100% + 8px);
+  transform: translateY(10px);
+}
+
+.atrium-select.is-open.is-up .atrium-select-dropdown {
+  transform: translateY(0);
+}
+
+.atrium-select-dropdown::-webkit-scrollbar { width: 6px; }
+.atrium-select-dropdown::-webkit-scrollbar-track { background: transparent; }
+.atrium-select-dropdown::-webkit-scrollbar-thumb {
+  background: var(--atrium-bg-transparent-20);
+  border-radius: 3px;
+}
+
+.atrium-select-option {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.atrium-select-option i {
+  font-size: 16px;
+  color: var(--atrium-text-muted);
+  transition: all 0.2s ease;
+}
+
+.atrium-select-option span {
+  color: var(--atrium-text-secondary);
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.atrium-select-option:hover,
+.atrium-select-option.is-highlighted {
+  background-color: var(--atrium-bg-hover);
+}
+
+.atrium-select-option:hover i,
+.atrium-select-option.is-highlighted i {
+  color: var(--atrium-text-primary);
+  transform: scale(1.1);
+}
+
+.atrium-select-option:hover span,
+.atrium-select-option.is-highlighted span {
+  color: var(--atrium-text-primary);
+}
+
+.atrium-select-option.is-selected {
+  background-color: rgba(90, 90, 122, 0.2);
+}
+
+.atrium-select-option.is-selected i {
+  color: var(--atrium-accent-color);
+}
+
+.atrium-select-option.is-selected span {
+  color: var(--atrium-text-primary);
+  font-weight: 600;
+}
+
+.atrium-select-option.is-selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--atrium-accent-color) 0%, var(--atrium-accent-hover) 100%);
+}
+
+.atrium-select-option.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* The native <select> stays in the DOM (forms, value) but is hidden. */
+.atrium-select-native {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ---------- Motion modes ---------- */
+
+[data-atrium-motion='reduced'] .atrium-select { transition: all 0.1s ease !important; }
+[data-atrium-motion='reduced'] .atrium-select-trigger > i { transition: transform 0.15s ease !important; }
+[data-atrium-motion='reduced'] .atrium-select-dropdown {
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease !important;
+}
+[data-atrium-motion='reduced'] .atrium-select-option,
+[data-atrium-motion='reduced'] .atrium-select-option i { transition: all 0.1s ease !important; }
+
+[data-atrium-motion='none'] .atrium-select,
+[data-atrium-motion='none'] .atrium-select-trigger > i,
+[data-atrium-motion='none'] .atrium-select-dropdown,
+[data-atrium-motion='none'] .atrium-select-option,
+[data-atrium-motion='none'] .atrium-select-option i { transition: none !important; }
+[data-atrium-motion='none'] .atrium-select.is-open .atrium-select-dropdown { transform: none !important; }

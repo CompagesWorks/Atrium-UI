@@ -1,0 +1,70 @@
+/*
+ * Tab panels, ported from MOSAIC's .tab-content (content.css) and
+ * .settings-tab-content (settings.css). Classes are added by atrium.tabs().
+ */
+
+/* ---------- 'slide' (main tabs) ---------- */
+
+.atrium-tab-stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.atrium-tab-panel {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  overflow: hidden;
+  will-change: opacity, transform, filter;
+}
+
+.atrium-tab-panel.is-active {
+  display: flex;
+}
+
+/* ---------- 'step' (settings sub-tabs) ---------- */
+
+.atrium-subtab-panel {
+  display: none;
+  width: 100%;
+  transform-origin: top center;
+  will-change: opacity, transform;
+}
+
+.atrium-subtab-panel.is-active {
+  display: block;
+}
+
+/* MOSAIC's performance.css forces this animation to 0.2s, so it is 0.2s here too. */
+.atrium-subtab-panel.is-entering {
+  animation-duration: 0.2s !important;
+  animation-fill-mode: both;
+  animation-timing-function: var(--atrium-ease-out-quint);
+}
+
+.atrium-subtab-panel.is-entering.is-forward {
+  animation-name: atrium-subtab-forward;
+}
+
+.atrium-subtab-panel.is-entering.is-back {
+  animation-name: atrium-subtab-back;
+}
+
+@keyframes atrium-subtab-forward {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes atrium-subtab-back {
+  from { opacity: 0; transform: translateX(-14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+[data-atrium-motion='none'] .atrium-subtab-panel.is-entering {
+  animation: none !important;
+}

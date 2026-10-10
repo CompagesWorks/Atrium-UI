@@ -1,0 +1,39 @@
+Atrium-UI License (MIT with visible attribution)
+
+Copyright (c) 2026 MOSAIC Foundation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+1. Notice. The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+
+2. Visible attribution. Any application, website or other product that uses
+   the Software, in whole or in part, including modified versions and styles
+   or animations derived from it, must display a credit to Atrium-UI inside
+   its own user interface:
+
+   a. The credit must appear in the product's "About" screen. If the product
+      has no About screen, it must appear in an equivalent screen that end
+      users can open from the product itself, such as Credits or Settings.
+
+   b. The credit must read "UI by Atrium-UI", or a faithful translation of
+      it, and must include a link to https://github.com/MosaicFoundation/Atrium-UI
+      wherever the screen can show links.
+
+   c. A mention only in source code, in a README, in documentation or in any
+      other place that end users do not see inside the product does NOT
+      satisfy this condition. Such mentions are welcome in addition to the
+      in-product credit, never instead of it.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

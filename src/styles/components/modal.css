@@ -1,0 +1,246 @@
+/*
+ * Ported from MOSAIC's modals.css + animations/modals.css.
+ * State is driven by classes (.is-open / .is-closing) instead of inline display styles.
+ */
+
+.atrium-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--atrium-bg-modal-overlay);
+  z-index: 9999;
+  display: none;
+  opacity: 0;
+  backdrop-filter: blur(0px);
+}
+
+.atrium-modal-overlay.is-open {
+  display: block;
+  animation: atrium-overlay-in 0.3s var(--atrium-ease-out-expo) forwards;
+}
+
+.atrium-modal-overlay.is-closing {
+  animation: atrium-overlay-out 0.25s var(--atrium-ease-standard) forwards;
+}
+
+.atrium-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  background: linear-gradient(135deg, var(--atrium-border-color) 0%, var(--atrium-bg-tertiary) 100%);
+  border: 1px solid var(--atrium-border-hover);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  min-width: 400px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: var(--atrium-font-family);
+  color: var(--atrium-text-primary);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9) translateY(20px);
+  filter: blur(4px);
+}
+
+.atrium-modal.is-open {
+  display: flex;
+  animation: atrium-modal-in 0.4s var(--atrium-ease-out-expo) forwards;
+}
+
+/* Set once the entrance finishes, so later one-shot animations (shake) don't replay it. */
+.atrium-modal.is-shown {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  filter: none;
+  animation: none;
+}
+
+.atrium-modal.is-shown.atrium-shake-centered {
+  animation: atrium-shake-centered 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.atrium-modal.is-closing {
+  pointer-events: none;
+  animation: atrium-modal-out 0.3s var(--atrium-ease-standard) forwards;
+}
+
+/* A modal opened above another modal gets its own depth layer. */
+.atrium-modal.is-stacked {
+  z-index: 10002;
+  box-shadow:
+    0 0 0 100vmax rgba(0, 0, 0, 0.58),
+    0 28px 80px rgba(0, 0, 0, 0.72);
+}
+
+.atrium-modal-small {
+  min-width: 320px;
+  width: min(420px, 90vw);
+}
+
+.atrium-modal-large {
+  min-width: 600px;
+  width: 80vw;
+}
+
+.atrium-modal-fullscreen {
+  width: 95vw;
+  height: 90vh;
+  max-height: 90vh;
+}
+
+.atrium-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid var(--atrium-border-hover);
+  flex: 0 0 auto;
+  gap: 16px;
+}
+
+.atrium-modal-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--atrium-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.atrium-modal-title i {
+  font-size: 22px;
+  color: var(--atrium-accent-color);
+}
+
+.atrium-modal-danger .atrium-modal-title i { color: var(--atrium-danger-color); }
+.atrium-modal-warning .atrium-modal-title i { color: var(--atrium-warning-color); }
+.atrium-modal-success .atrium-modal-title i { color: var(--atrium-success-color); }
+
+.atrium-modal-close {
+  background: none;
+  border: none;
+  color: var(--atrium-text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.atrium-modal-close:hover {
+  background: var(--atrium-bg-transparent-10);
+  color: var(--atrium-text-primary);
+}
+
+.atrium-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 24px;
+  position: relative;
+  min-height: 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.atrium-modal-body::-webkit-scrollbar { width: 10px; }
+.atrium-modal-body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  margin: 8px 0;
+}
+.atrium-modal-body::-webkit-scrollbar-thumb {
+  background: var(--atrium-bg-transparent-15);
+  border-radius: 5px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+}
+.atrium-modal-body::-webkit-scrollbar-thumb:hover { background: var(--atrium-bg-transparent-20); }
+.atrium-modal-body::-webkit-scrollbar-thumb:active { background: var(--atrium-bg-transparent-30); }
+
+.atrium-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 24px;
+  border-top: 1px solid var(--atrium-border-hover);
+  flex: 0 0 auto;
+}
+
+.atrium-modal-footer .atrium-btn-secondary {
+  margin-right: auto;
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes atrium-overlay-in {
+  0% { opacity: 0; backdrop-filter: blur(0px); }
+  100% { opacity: 1; backdrop-filter: blur(8px); }
+}
+
+@keyframes atrium-overlay-out {
+  0% { opacity: 1; backdrop-filter: blur(8px); }
+  100% { opacity: 0; backdrop-filter: blur(0px); }
+}
+
+@keyframes atrium-modal-in {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9) translateY(30px); filter: blur(8px); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1) translateY(0); filter: blur(0px); }
+}
+
+@keyframes atrium-modal-out {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1) translateY(0); filter: blur(0px); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95) translateY(-20px); filter: blur(4px); }
+}
+
+/* ---------- Motion modes ---------- */
+
+[data-atrium-motion='reduced'] .atrium-modal-overlay.is-open {
+  backdrop-filter: none !important;
+  animation: none !important;
+  opacity: 1;
+}
+
+[data-atrium-motion='reduced'] .atrium-modal {
+  filter: none !important;
+}
+
+[data-atrium-motion='reduced'] .atrium-modal.is-open:not(.is-shown) {
+  animation: atrium-modal-in-reduced 0.15s ease forwards !important;
+}
+
+[data-atrium-motion='reduced'] .atrium-modal.is-open.is-closing {
+  animation: atrium-modal-out-reduced 0.15s ease forwards !important;
+}
+
+@keyframes atrium-modal-in-reduced {
+  0% { opacity: 0; transform: translate(-50%, -50%) translateY(10px); }
+  100% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+}
+
+@keyframes atrium-modal-out-reduced {
+  0% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) translateY(-10px); }
+}
+
+[data-atrium-motion='none'] .atrium-modal-overlay,
+[data-atrium-motion='none'] .atrium-modal {
+  animation: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+[data-atrium-motion='none'] .atrium-modal-overlay.is-open { opacity: 1; }
+[data-atrium-motion='none'] .atrium-modal.is-open {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+[data-atrium-motion='none'] .atrium-modal.is-closing {
+  opacity: 0;
+}

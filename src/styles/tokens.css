@@ -1,0 +1,151 @@
+/*
+ * Atrium-UI design tokens, ported 1:1 from MOSAIC's variables.css.
+ * Override any of them on :root (or a wrapper) to re-theme the library.
+ */
+:root {
+  /* Typography */
+  --atrium-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* MOSAIC never sets a font on buttons/inputs, so Chromium renders them in Arial. */
+  --atrium-font-control: Arial;
+
+  /* Backgrounds */
+  --atrium-bg-primary: #1a1a1a;
+  --atrium-bg-secondary: #0a0a0a;
+  --atrium-bg-tertiary: #252525;
+  --atrium-bg-input: #2b2b2b;
+  --atrium-bg-card: #202020;
+  --atrium-bg-titlebar-start: #0f0f0f;
+  --atrium-bg-titlebar-end: #1a1a1a;
+  --atrium-bg-modal: #1a1a1a;
+  --atrium-bg-modal-overlay: rgba(0, 0, 0, 0.7);
+
+  /* Text */
+  --atrium-text-primary: #ffffff;
+  --atrium-text-secondary: #cccccc;
+  --atrium-text-muted: #888888;
+  --atrium-text-inverse: #000000;
+
+  /* Borders */
+  --atrium-border-color: #2a2a2a;
+  --atrium-border-hover: #3a3a3a;
+
+  /* Accents */
+  --atrium-accent-color: #7a9bff;
+  --atrium-accent-rgb: 122, 155, 255;
+  --atrium-accent-hover: #5a7adf;
+  --atrium-accent-gradient-start: #7a9bff;
+  --atrium-accent-gradient-end: #5a7adf;
+
+  /* Status */
+  --atrium-danger-color: #ff3366;
+  --atrium-danger-rgb: 255, 51, 102;
+  --atrium-danger-hover: #d62b55;
+  --atrium-warning-color: #ff9800;
+  --atrium-warning-rgb: 255, 152, 0;
+  --atrium-success-color: #4ade80;
+  --atrium-success-rgb: 74, 222, 128;
+
+  /* Transparent backgrounds (adaptive) */
+  --atrium-bg-transparent-03: rgba(255, 255, 255, 0.03);
+  --atrium-bg-transparent-05: rgba(255, 255, 255, 0.05);
+  --atrium-bg-transparent-08: rgba(255, 255, 255, 0.08);
+  --atrium-bg-transparent-10: rgba(255, 255, 255, 0.1);
+  --atrium-bg-transparent-15: rgba(255, 255, 255, 0.15);
+  --atrium-bg-transparent-20: rgba(255, 255, 255, 0.2);
+  --atrium-bg-transparent-30: rgba(255, 255, 255, 0.3);
+
+  /* Transparent borders (adaptive) */
+  --atrium-border-transparent-08: rgba(255, 255, 255, 0.08);
+  --atrium-border-transparent-10: rgba(255, 255, 255, 0.1);
+  --atrium-border-transparent-20: rgba(255, 255, 255, 0.2);
+  --atrium-border-transparent-30: rgba(255, 255, 255, 0.3);
+
+  /* Shadows */
+  --atrium-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --atrium-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --atrium-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+
+  /* Interactive */
+  --atrium-bg-hover: rgba(255, 255, 255, 0.05);
+  --atrium-bg-item-hover: #333333;
+  --atrium-bg-item-hover-alt: #323232;
+  --atrium-bg-accent-subtle: rgba(122, 155, 255, 0.1);
+
+  /* Icons */
+  --atrium-icon-filter: none;
+
+  /* Motion (MOSAIC's easing curves) */
+  --atrium-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --atrium-ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --atrium-ease-out-soft: cubic-bezier(0.19, 1, 0.22, 1);
+  --atrium-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --atrium-ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-atrium-theme='light'] {
+  /* Backgrounds */
+  --atrium-bg-primary: #fafafa;
+  --atrium-bg-secondary: #ffffff;
+  --atrium-bg-tertiary: #f0f0f0;
+  --atrium-bg-input: #ffffff;
+  --atrium-bg-card: #ffffff;
+  --atrium-bg-titlebar-start: #f5f5f5;
+  --atrium-bg-titlebar-end: #fafafa;
+  --atrium-bg-modal: #ffffff;
+  --atrium-bg-modal-overlay: rgba(0, 0, 0, 0.4);
+
+  /* Text */
+  --atrium-text-primary: #2a2a2a;
+  --atrium-text-secondary: #4a4a4a;
+  --atrium-text-muted: #6a6a6a;
+  --atrium-text-inverse: #ffffff;
+
+  /* Borders */
+  --atrium-border-color: #e5e5e5;
+  --atrium-border-hover: #d0d0d0;
+
+  /* Accents */
+  --atrium-accent-color: #5a7adf;
+  --atrium-accent-rgb: 90, 122, 223;
+  --atrium-accent-hover: #4a6ac0;
+  --atrium-accent-gradient-start: #5a7adf;
+  --atrium-accent-gradient-end: #4a6ac0;
+
+  /* Status */
+  --atrium-danger-color: #dc3545;
+  --atrium-danger-rgb: 220, 53, 69;
+  --atrium-danger-hover: #c82333;
+  --atrium-warning-color: #ffc107;
+  --atrium-warning-rgb: 255, 193, 7;
+  --atrium-success-color: #28a745;
+  --atrium-success-rgb: 40, 167, 69;
+
+  /* Transparent backgrounds (adaptive) */
+  --atrium-bg-transparent-03: rgba(0, 0, 0, 0.02);
+  --atrium-bg-transparent-05: rgba(0, 0, 0, 0.03);
+  --atrium-bg-transparent-08: rgba(0, 0, 0, 0.05);
+  --atrium-bg-transparent-10: rgba(0, 0, 0, 0.06);
+  --atrium-bg-transparent-15: rgba(0, 0, 0, 0.08);
+  --atrium-bg-transparent-20: rgba(0, 0, 0, 0.1);
+  --atrium-bg-transparent-30: rgba(0, 0, 0, 0.15);
+
+  /* Transparent borders (adaptive) */
+  --atrium-border-transparent-08: rgba(0, 0, 0, 0.05);
+  --atrium-border-transparent-10: rgba(0, 0, 0, 0.06);
+  --atrium-border-transparent-20: rgba(0, 0, 0, 0.1);
+  --atrium-border-transparent-30: rgba(0, 0, 0, 0.15);
+
+  /* Shadows */
+  --atrium-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --atrium-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --atrium-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  /* Interactive */
+  --atrium-bg-hover: rgba(0, 0, 0, 0.03);
+  --atrium-bg-item-hover: #f8f8f8;
+  --atrium-bg-item-hover-alt: #f5f5f5;
+  --atrium-bg-accent-subtle: rgba(90, 122, 223, 0.08);
+
+  /* Icons */
+  --atrium-icon-filter: invert(1) brightness(0.2);
+}

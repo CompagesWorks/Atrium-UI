@@ -1,0 +1,37 @@
+{
+  "name": "atrium-ui",
+  "version": "0.1.0",
+  "description": "Atrium-UI: the MOSAIC interface (tokens, animations, toasts, modals) as a reusable vanilla TypeScript library",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "main": "./dist/atrium-ui.js",
+  "module": "./dist/atrium-ui.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/atrium-ui.js"
+    },
+    "./style.css": "./dist/atrium-ui.css"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "bootstrap-icons": "^1.11.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.0"
+  }
+}
