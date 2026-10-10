@@ -258,3 +258,21 @@ textarea.atrium-input {
 [data-atrium-motion='none'] .atrium-switch-slider::before {
   transition: none !important;
 }
+
+/* Error text under a field (used by modal.prompt) */
+.atrium-field-error {
+  min-height: 0;
+  margin-top: 8px;
+  color: var(--atrium-danger-color);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.atrium-field-error:empty {
+  display: none;
+}
+
+.atrium-prompt-message {
+  margin-bottom: 16px;
+  color: var(--atrium-text-secondary);
+}

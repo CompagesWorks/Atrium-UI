@@ -1,4 +1,4 @@
-import { createAtrium, replayAnimation, stagger, type MotionMode, type StatusTone, type ThemeName, type ToastType } from '../src';
+import { createAtrium, highlight, renderShortcut, replayAnimation, stagger, type MotionMode, type StatusTone, type ThemeName, type ToastType } from '../src';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import logoDarkUrl from '../logo.png';
 import logoLightUrl from '../logo-light.png';
@@ -243,3 +243,106 @@ for (const token of ['bg-primary', 'bg-tertiary', 'accent-color', 'success-color
   card.innerHTML = `<div class="pg-swatch" style="background:var(--atrium-${token})"></div><code>--atrium-${token}</code>`;
   swatches.appendChild(card);
 }
+
+// Dropdown menus
+let sortBy = 'Name';
+atrium.menu.attach($('#dropdown-sort'), () =>
+  ['Name', 'Date added', 'Size'].map((label) => ({
+    label,
+    icon: label === sortBy ? 'check2' : undefined,
+    onClick: () => {
+      sortBy = label;
+      atrium.toast.info('Sorted by {{label}}', { params: { label } });
+    },
+  })),
+);
+
+atrium.menu.attach(
+  $('#dropdown-more'),
+  [
+    { label: 'Open folder', icon: 'folder2-open', shortcut: 'Mod+O', onClick: () => atrium.toast.info('Folder opened') },
+    { label: 'Rename', icon: 'pencil', shortcut: 'F2', onClick: () => void renameDemo() },
+    { label: 'Duplicate', icon: 'copy', onClick: () => atrium.toast.success('Duplicated') },
+    'separator',
+    { label: 'Delete', icon: 'trash3', danger: true, onClick: () => atrium.toast.error('Deleted') },
+  ],
+  { placement: 'bottom-end' },
+);
+
+atrium.menu.attach($('#dropdown-new'), [
+  { label: 'Mod', icon: 'box-seam', onClick: () => atrium.toast.info('New mod') },
+  { label: 'Profile', icon: 'person-plus', onClick: () => atrium.toast.info('New profile') },
+  { label: 'Folder', icon: 'folder-plus', onClick: () => atrium.toast.info('New folder') },
+]);
+
+// Prompt
+async function renameDemo() {
+  const name = await atrium.modal.prompt({
+    title: 'Rename mod',
+    icon: 'pencil-fill',
+    label: 'Name',
+    value: 'Mario Classic',
+    confirmText: 'Rename',
+    validate: (value) => (value.length > 32 ? 'Use 32 characters or fewer.' : value === 'Link' ? 'A mod named "Link" already exists.' : null),
+  });
+  if (name !== null) atrium.toast.success('Renamed to "{{name}}"', { params: { name } });
+}
+$('#modal-prompt').addEventListener('click', () => void renameDemo());
+
+// Settings page
+atrium.tabs({ root: $('#settings-panels'), nav: $('#settings-nav'), transition: 'step' });
+atrium.select($<HTMLSelectElement>('#setting-channel'));
+$('#highlight-row').addEventListener('click', () => {
+  highlight($('#setting-updates'));
+});
+$('#highlight-section').addEventListener('click', () => highlight($('#setting-library')));
+
+// Command palette
+const sectionCommand = (id: string, title: string, iconName: string, selector: string) => ({
+  id: `go-${id}`,
+  title,
+  icon: iconName,
+  section: 'Go to',
+  run: () => document.querySelector(selector)?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+});
+atrium.commands.register([
+  sectionCommand('buttons', 'Buttons', 'hand-index', '.pg-buttons'),
+  sectionCommand('forms', 'Forms', 'input-cursor-text', '.pg-form'),
+  sectionCommand('settings', 'Settings page', 'sliders', '.pg-settings'),
+  sectionCommand('shell', 'App shell', 'window', '.pg-shell'),
+  {
+    id: 'theme',
+    title: 'Toggle light / dark theme',
+    icon: 'circle-half',
+    section: 'Appearance',
+    keywords: ['dark mode', 'light mode', 'colors'],
+    shortcut: 'Mod+Shift+L',
+    run: () => {
+      themeSelect.value = atrium.theme === 'dark' ? 'light' : 'dark';
+      themeSelect.dispatchEvent(new Event('change'));
+    },
+  },
+  {
+    id: 'motion',
+    title: 'Cycle animation mode',
+    icon: 'speedometer2',
+    section: 'Appearance',
+    keywords: ['reduced motion', 'animations'],
+    run: () => {
+      const modes = ['full', 'reduced', 'none'] as const;
+      motionSelect.value = modes[(modes.indexOf(atrium.motion) + 1) % modes.length];
+      motionSelect.dispatchEvent(new Event('change'));
+      atrium.toast.info('Animations: {{mode}}', { params: { mode: atrium.motion } });
+    },
+  },
+  { id: 'toast', title: 'Show a success toast', icon: 'bell', section: 'Actions', run: () => {
+      atrium.toast.success('Hello from the palette');
+    },
+  },
+  { id: 'rename', title: 'Rename mod…', icon: 'pencil', section: 'Actions', shortcut: 'F2', run: () => renameDemo() },
+  { id: 'prompt-confirm', title: 'Uninstall mod…', icon: 'trash3', section: 'Actions', keywords: ['delete', 'remove'], run: () => void atrium.modal.confirm({ title: 'Uninstall this mod?', message: 'Its files will be permanently deleted.', danger: true }) },
+]);
+$('#open-palette').addEventListener('click', () => atrium.commands.open());
+$('#palette-hotkey').appendChild(renderShortcut('Mod+K'));
+$('#palette-theme-hotkey').appendChild(renderShortcut('Mod+Shift+L'));
+

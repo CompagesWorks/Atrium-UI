@@ -3,6 +3,7 @@
 @import './motion.css';
 
 @import './components/button.css';
+@import './components/kbd.css';
 @import './components/form.css';
 @import './components/select.css';
 @import './components/tooltip.css';
@@ -12,3 +13,5 @@
 @import './components/modal.css';
 @import './components/tabs.css';
 @import './components/shell.css';
+@import './components/settings.css';
+@import './components/palette.css';

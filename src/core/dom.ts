@@ -29,3 +29,29 @@ export function replayAnimation(target: HTMLElement, className: string) {
   target.classList.add(className);
   target.addEventListener('animationend', () => target.classList.remove(className), { once: true });
 }
+
+/**
+ * MOSAIC's "jump to setting" highlight: scrolls `target` into view and pulses it with an
+ * accent outline, then fades out after `duration` ms or on the first click inside it.
+ * Works on .atrium-settings-section and .atrium-setting-row.
+ */
+export function highlight(target: HTMLElement, duration = 3000) {
+  const still = document.documentElement.dataset.atriumMotion === 'none';
+  target.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'nearest' });
+  if (still) return;
+
+  target.classList.remove('is-highlight-fading');
+  target.classList.add('is-highlighted');
+
+  let done = false;
+  const fade = () => {
+    if (done) return;
+    done = true;
+    target.removeEventListener('pointerdown', fade);
+    target.classList.remove('is-highlighted');
+    target.classList.add('is-highlight-fading');
+    setTimeout(() => target.classList.remove('is-highlight-fading'), 500);
+  };
+  target.addEventListener('pointerdown', fade);
+  setTimeout(fade, duration);
+}

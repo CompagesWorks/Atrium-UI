@@ -1,0 +1,30 @@
+/*
+ * Keyboard keys (Atrium addition, in MOSAIC's palette).
+ * <kbd class="atrium-kbd">Ctrl</kbd>, or renderShortcut('Mod+K') for a group.
+ */
+
+.atrium-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border: 1px solid var(--atrium-border-hover);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--atrium-bg-transparent-05);
+  color: var(--atrium-text-secondary);
+  font-family: var(--atrium-font-family);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.atrium-kbd-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}

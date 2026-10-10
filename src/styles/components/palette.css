@@ -1,0 +1,211 @@
+/*
+ * Command palette (Atrium addition). Built from MOSAIC's materials: the modal's
+ * gradient panel, overlay blur and entrance curve, and the context menu's item style.
+ */
+
+.atrium-palette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10500;
+  display: none;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 14vh 16px 16px;
+  background: var(--atrium-bg-modal-overlay);
+}
+
+.atrium-palette-overlay.is-open {
+  display: flex;
+  animation: atrium-overlay-in 0.3s var(--atrium-ease-out-expo) forwards;
+}
+
+.atrium-palette-overlay.is-closing {
+  animation: atrium-overlay-out 0.2s var(--atrium-ease-standard) forwards;
+}
+
+.atrium-palette {
+  display: flex;
+  flex-direction: column;
+  width: min(640px, 100%);
+  max-height: min(560px, 72vh);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--atrium-border-color) 0%, var(--atrium-bg-tertiary) 100%);
+  border: 1px solid var(--atrium-border-hover);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  font-family: var(--atrium-font-family);
+  color: var(--atrium-text-primary);
+}
+
+.atrium-palette-overlay.is-open .atrium-palette {
+  animation: atrium-palette-in 0.4s var(--atrium-ease-out-expo) forwards;
+}
+
+.atrium-palette-overlay.is-closing .atrium-palette {
+  animation: atrium-palette-out 0.2s var(--atrium-ease-standard) forwards;
+}
+
+/* ---------- Search ---------- */
+
+.atrium-palette-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--atrium-border-hover);
+}
+
+.atrium-palette-search > i {
+  color: var(--atrium-text-muted);
+  font-size: 18px;
+}
+
+.atrium-palette-input {
+  flex: 1;
+  min-width: 0;
+  height: 56px;
+  border: none;
+  outline: none;
+  background: none;
+  color: var(--atrium-text-primary);
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.atrium-palette-input::placeholder {
+  color: var(--atrium-text-muted);
+}
+
+/* ---------- Results ---------- */
+
+.atrium-palette-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  overscroll-behavior: contain;
+}
+
+.atrium-palette-list::-webkit-scrollbar { width: 10px; }
+.atrium-palette-list::-webkit-scrollbar-thumb {
+  background: var(--atrium-bg-transparent-15);
+  border: 2px solid transparent;
+  border-radius: 5px;
+  background-clip: padding-box;
+}
+
+.atrium-palette-section {
+  padding: 12px 12px 6px;
+  color: var(--atrium-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.atrium-palette-section:first-child {
+  padding-top: 6px;
+}
+
+/* Same as .atrium-menu-item */
+.atrium-palette-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.atrium-palette-item.is-active {
+  background: rgba(var(--atrium-accent-rgb), 0.15);
+}
+
+.atrium-palette-item > i {
+  width: 18px;
+  flex-shrink: 0;
+  color: var(--atrium-accent-color);
+  font-size: 16px;
+  text-align: center;
+}
+
+.atrium-palette-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.atrium-palette-match {
+  background: none;
+  color: var(--atrium-accent-color);
+  font-weight: 700;
+}
+
+.atrium-palette-item-section,
+.atrium-palette-hint {
+  flex-shrink: 0;
+  color: var(--atrium-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.atrium-palette-empty {
+  padding: 32px 12px;
+  color: var(--atrium-text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ---------- Footer ---------- */
+
+.atrium-palette-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--atrium-border-hover);
+  background: var(--atrium-bg-transparent-03);
+  color: var(--atrium-text-muted);
+  font-size: 12px;
+}
+
+.atrium-palette-footer-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---------- Keyframes (MOSAIC's modal entrance, without the centring translate) ---------- */
+
+@keyframes atrium-palette-in {
+  0% { opacity: 0; transform: scale(0.96) translateY(-12px); filter: blur(6px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+}
+
+@keyframes atrium-palette-out {
+  0% { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(0.97) translateY(-8px); filter: blur(4px); }
+}
+
+/* ---------- Motion modes ---------- */
+
+[data-atrium-motion='reduced'] .atrium-palette-overlay.is-open,
+[data-atrium-motion='reduced'] .atrium-palette-overlay.is-open .atrium-palette {
+  animation-duration: 0.15s !important;
+  filter: none !important;
+}
+
+[data-atrium-motion='none'] .atrium-palette-overlay,
+[data-atrium-motion='none'] .atrium-palette {
+  animation: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+[data-atrium-motion='none'] .atrium-palette-item {
+  transition: none;
+}

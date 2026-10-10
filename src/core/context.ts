@@ -1,3 +1,5 @@
+import type { PaletteOptions } from '../components/palette';
+
 export type ThemeName = 'dark' | 'light';
 export type MotionMode = 'full' | 'reduced' | 'none';
 export type SoundName = 'complete' | 'error' | 'notification' | 'switchTab';
@@ -14,6 +16,8 @@ export interface AtriumOptions {
   motion?: MotionMode;
   /** Element that receives the toast container, overlay and modals. Default: document.body. */
   mount?: HTMLElement;
+  /** Command palette settings (hotkey, texts). */
+  palette?: PaletteOptions;
   toast?: {
     /** Max toasts in the stack before the oldest is dismissed. Default: 5. */
     maxVisible?: number;

@@ -38,7 +38,7 @@ export interface AtriumWindowApi {
  * or let registerWindowControls({ session }) register it.
  */
 export function getPreloadPath(): string {
-  return fileURLToPath(new URL('./preload.cjs', import.meta.url));
+  return fileURLToPath(new URL(/* @vite-ignore */ './preload.cjs', import.meta.url));
 }
 
 // ---------- Minimal shapes of the Electron APIs used ----------

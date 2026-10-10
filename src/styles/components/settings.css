@@ -1,0 +1,253 @@
+/*
+ * Settings page building blocks.
+ *
+ *   MOSAIC                 -> Atrium-UI
+ *   .settings-container    -> .atrium-settings            (sidebar + scrolling content)
+ *   .settings-sidebar      -> .atrium-settings-sidebar    (holds .atrium-tab-btn)
+ *   .settings-content-area -> .atrium-settings-content
+ *   .settings-title        -> .atrium-settings-title
+ *   .settings-group-title  -> .atrium-settings-group-title
+ *   .settings-section      -> .atrium-settings-section    (card)
+ *   .settings-label        -> .atrium-settings-label
+ *   .settings-hint         -> .atrium-settings-hint
+ *   .highlight-setting     -> .is-highlighted             (or highlightElement())
+ *   (new)                  -> .atrium-setting-row         (text left, control right)
+ *
+ * <section class="atrium-settings-section">
+ *   <div class="atrium-setting-row">
+ *     <div class="atrium-setting-text">
+ *       <span class="atrium-setting-title">Discord status</span>
+ *       <span class="atrium-setting-desc">Show what you're playing on Discord.</span>
+ *     </div>
+ *     <label class="atrium-switch">…</label>
+ *   </div>
+ *   …more rows, separated automatically
+ * </section>
+ */
+
+/* ===================== Page layout ===================== */
+
+.atrium-settings {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--atrium-font-family);
+}
+
+.atrium-settings-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 0;
+  overflow-y: auto;
+  background: linear-gradient(135deg, var(--atrium-bg-primary) 0%, var(--atrium-bg-tertiary) 100%);
+  border-right: 1px solid var(--atrium-border-color);
+}
+
+.atrium-settings-content {
+  flex: 1;
+  position: relative;
+  overflow-y: auto;
+  padding: 24px 32px;
+  background: var(--atrium-bg-primary);
+}
+
+.atrium-settings-content::-webkit-scrollbar { width: 8px; }
+.atrium-settings-content::-webkit-scrollbar-thumb {
+  background: var(--atrium-border-hover);
+  border-radius: 4px;
+}
+
+.atrium-settings-title {
+  margin: 0 0 32px 0;
+  color: var(--atrium-text-primary);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.atrium-settings-group-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px 0 16px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--atrium-bg-transparent-10);
+  color: var(--atrium-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.atrium-settings-group-title:first-of-type {
+  margin-top: 0;
+}
+
+.atrium-settings-group-title i {
+  font-size: 14px;
+  color: var(--atrium-accent-color);
+}
+
+/* ===================== Section card ===================== */
+
+.atrium-settings-section {
+  position: relative;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--atrium-border-color) 0%, var(--atrium-bg-tertiary) 100%);
+  border: 1px solid var(--atrium-bg-transparent-08);
+  border-radius: 16px;
+}
+
+.atrium-settings-label {
+  display: block;
+  margin-bottom: 16px;
+  color: var(--atrium-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.atrium-settings-hint {
+  margin-top: 12px;
+  color: var(--atrium-text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ===================== Setting row (Atrium addition) ===================== */
+
+.atrium-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 44px;
+}
+
+.atrium-setting-row + .atrium-setting-row {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--atrium-bg-transparent-08);
+}
+
+.atrium-setting-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.atrium-setting-title {
+  color: var(--atrium-text-primary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.atrium-setting-desc {
+  max-width: 60ch;
+  color: var(--atrium-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* The control column: switch, select, button or a small input group */
+.atrium-setting-row > :not(.atrium-setting-text) {
+  flex-shrink: 0;
+}
+
+.atrium-setting-row.is-stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.atrium-setting-row.is-disabled .atrium-setting-text {
+  opacity: 0.5;
+}
+
+@container (max-width: 400px) {
+  .atrium-setting-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+}
+
+.atrium-settings-section {
+  container-type: inline-size;
+}
+
+/* ===================== Highlight (MOSAIC .highlight-setting) ===================== */
+/* Pulses a setting after jumping to it, e.g. from a search or the command palette. */
+
+.atrium-settings-section.is-highlighted,
+.atrium-setting-row.is-highlighted {
+  position: relative;
+  animation: atrium-highlight-pulse 1.5s ease-in-out 2;
+}
+
+.atrium-settings-section.is-highlighted::before,
+.atrium-setting-row.is-highlighted::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--atrium-accent-color);
+  border-radius: 16px;
+  pointer-events: none;
+  animation: atrium-highlight-border 1.5s ease-in-out 2;
+}
+
+.atrium-settings-section.is-highlight-fading,
+.atrium-setting-row.is-highlight-fading {
+  position: relative;
+  animation: atrium-highlight-fade 0.5s ease-out forwards;
+}
+
+.atrium-settings-section.is-highlight-fading::before,
+.atrium-setting-row.is-highlight-fading::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--atrium-accent-color);
+  border-radius: 16px;
+  pointer-events: none;
+  animation: atrium-highlight-border-fade 0.5s ease-out forwards;
+}
+
+/* Rows are not cards: round the pulse and keep the border inside the section */
+.atrium-setting-row.is-highlighted,
+.atrium-setting-row.is-highlight-fading {
+  border-radius: 10px;
+}
+
+.atrium-setting-row.is-highlighted::before,
+.atrium-setting-row.is-highlight-fading::before {
+  inset: -8px -10px;
+  border-radius: 12px;
+}
+
+@keyframes atrium-highlight-pulse {
+  0%, 100% { background: transparent; }
+  50% { background: rgba(var(--atrium-accent-rgb), 0.1); }
+}
+
+@keyframes atrium-highlight-border {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes atrium-highlight-fade {
+  0% { background: rgba(var(--atrium-accent-rgb), 0.1); }
+  100% { background: transparent; }
+}
+
+@keyframes atrium-highlight-border-fade {
+  0% { opacity: 0.5; }
+  100% { opacity: 0; }
+}

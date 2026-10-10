@@ -54,6 +54,13 @@ const ok = await atrium.modal.confirm({
 
 await atrium.modal.alert({ title: 'Done', message: 'All mods are up to date.', tone: 'success' });
 
+const name = await atrium.modal.prompt({
+  title: 'Rename mod',
+  label: 'Name',
+  value: 'Mario Classic',
+  validate: (value) => (taken(value) ? 'This name is already used.' : null), // shakes and shows the error
+}); // the trimmed text, or null when cancelled
+
 const modal = atrium.modal.open({
   title: 'Rename',
   icon: 'pencil-fill',
@@ -122,6 +129,67 @@ atrium.menu.open({ x: 120, y: 80 }, items);
 ```
 
 It stays inside the window, closes on outside click, Escape, scroll, resize or window blur, and is keyboard navigable (arrows, Home, End).
+
+### Dropdown menus
+
+The same menu, anchored to a button (a "⋯" button, "Sort by", "New"…). Click toggles it; ArrowDown, Enter or Space open it with the first item focused.
+
+```ts
+atrium.menu.attach(button, [
+  { label: 'Open folder', icon: 'folder2-open', shortcut: 'Mod+O', onClick: open },
+  { label: 'Delete', icon: 'trash3', danger: true, onClick: remove },
+], { placement: 'bottom-end' }); // 'bottom-start' (default) | 'bottom-end' | 'top-start' | 'top-end'
+
+atrium.menu.openAt(button, items); // or open it yourself
+```
+
+It flips above the button when there is no room below. `shortcut` shows key chips; it does not bind the key (use the command palette for that).
+
+## Command palette
+
+A searchable list of every action in the app, opened with **Ctrl+K** (⌘K on macOS). Built from MOSAIC's modal and menu styles.
+
+```ts
+atrium.commands.register([
+  { id: 'settings', title: 'Open settings', icon: 'gear', section: 'Go to', shortcut: 'Mod+,', run: () => tabs.show('settings') },
+  { id: 'theme', title: 'Toggle dark mode', icon: 'circle-half', keywords: ['theme'], run: toggleTheme },
+  { id: 'export', title: 'Export profile…', icon: 'box-arrow-up', when: () => hasProfile(), run: exportProfile },
+]);
+
+atrium.commands.open(); // or open('query'), close(), toggle(), run('settings')
+```
+
+- Search matches titles letter by letter ("tgl thm" finds "Toggle … theme"), then sections and `keywords`.
+- A command's `shortcut` works anywhere in the app, not only in the palette. Plain keys (like `F2` or `/`) don't fire while typing in a field.
+- `when` hides a command (and disables its shortcut) while it returns false.
+- Change or disable the hotkey with `createAtrium({ palette: { hotkey: 'Mod+P' } })` or `hotkey: false`.
+
+Key chips are available on their own: `<kbd class="atrium-kbd">Ctrl</kbd>`, or `renderShortcut('Mod+Shift+P')`, which shows the right keys for the platform.
+
+## Settings page
+
+MOSAIC's settings layout, plus one new block: a row with a title and description on the left and its control on the right. The full markup is at the top of `src/styles/components/settings.css`.
+
+```html
+<div class="atrium-settings">
+  <nav class="atrium-settings-sidebar">…atrium-tab-btn…</nav>
+  <div class="atrium-settings-content">
+    <div class="atrium-settings-title">General</div>
+    <div class="atrium-settings-group-title"><i class="bi bi-rocket-takeoff"></i>Startup</div>
+    <section class="atrium-settings-section">
+      <div class="atrium-setting-row">
+        <div class="atrium-setting-text">
+          <span class="atrium-setting-title">Launch at login</span>
+          <span class="atrium-setting-desc">Start the app in the background when you sign in.</span>
+        </div>
+        <label class="atrium-switch"><input type="checkbox"><span class="atrium-switch-slider"></span></label>
+      </div>
+    </section>
+  </div>
+</div>
+```
+
+Rows stack vertically when their section is narrower than 400px (`.is-stacked` forces it). `highlight(element)` reproduces MOSAIC's "jump to setting" effect: it scrolls to a section or row and pulses an accent outline for 3 seconds, or until it is clicked.
 
 ## Select
 
@@ -288,6 +356,7 @@ Each class maps to a MOSAIC element and was checked against MOSAIC's stylesheet 
 | `atrium-enter-list` + `stagger(container)` | Cascading entrance for list items |
 | `atrium-lift` | Hover lift of MOSAIC's action buttons |
 | `atrium-shake`, `atrium-bounce`, `atrium-spin` | One-shot animations (replay with `replayAnimation`) |
+| `atrium-kbd` | A keyboard key chip; `renderShortcut('Mod+K')` builds a group |
 | `atrium-shell` on `<body>` | Full-window layout for an Electron app |
 
 ## Theme
@@ -324,6 +393,7 @@ The playground is deployed to GitHub Pages by `.github/workflows/pages.yml` on e
 - [x] File drop zone in the status bar
 - [ ] MOSAIC's expanding "dynamic island" download panel in the status bar
 - [x] `atrium-ui/electron`: window controls for Electron, sandbox-safe preload
+- [x] Dropdown menus, `modal.prompt()`, settings rows, command palette with global shortcuts
 - [ ] Built-in UI sounds, splash screen and loading Lottie
 - [ ] Guided tutorial
 

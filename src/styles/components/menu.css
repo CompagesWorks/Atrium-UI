@@ -91,13 +91,13 @@
 }
 
 @keyframes atrium-menu-in {
-  0% { opacity: 0; transform: scale(0.85) translateY(-12px); filter: blur(8px); }
+  0% { opacity: 0; transform: scale(0.85) translateY(calc(-12px * var(--_menu-dir, 1))); filter: blur(8px); }
   100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); pointer-events: all; }
 }
 
 @keyframes atrium-menu-out {
   0% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); }
-  100% { opacity: 0; transform: scale(0.85) translateY(-12px); filter: blur(8px); pointer-events: none; }
+  100% { opacity: 0; transform: scale(0.85) translateY(calc(-12px * var(--_menu-dir, 1))); filter: blur(8px); pointer-events: none; }
 }
 
 /* ---------- Motion modes ---------- */
@@ -112,7 +112,7 @@
 }
 
 @keyframes atrium-menu-in-reduced {
-  0% { opacity: 0; transform: translateY(-5px); }
+  0% { opacity: 0; transform: translateY(calc(-5px * var(--_menu-dir, 1))); }
   100% { opacity: 1; transform: translateY(0); pointer-events: all; }
 }
 
@@ -127,4 +127,19 @@
   transform: none;
   filter: none;
   pointer-events: all;
+}
+
+/* Dropdown opened upward: animate from below instead of from above */
+.atrium-menu.is-up {
+  --_menu-dir: -1;
+}
+
+/* Shortcut chips at the end of an item */
+.atrium-menu-item .atrium-kbd-group {
+  margin-left: auto;
+  padding-left: 16px;
+}
+
+.atrium-menu-item-hint + .atrium-kbd-group {
+  margin-left: 8px;
 }

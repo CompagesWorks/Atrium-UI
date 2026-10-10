@@ -40,6 +40,25 @@ export interface ModalOptions {
   onClose?: () => void;
 }
 
+export interface PromptOptions {
+  title: string;
+  message?: string;
+  label?: string;
+  placeholder?: string;
+  /** Initial value, selected when the modal opens. */
+  value?: string;
+  confirmText?: string;
+  cancelText?: string;
+  icon?: string;
+  /** A textarea instead of a single-line input (Ctrl+Enter submits). */
+  multiline?: boolean;
+  /** Default: true. Empty (whitespace-only) answers are refused. */
+  required?: boolean;
+  /** Return an error message to refuse the value (the modal shakes and shows it). */
+  validate?: (value: string) => string | null | undefined | void | Promise<string | null | undefined | void>;
+  params?: TranslateParams;
+}
+
 export interface ModalHandle {
   readonly element: HTMLElement;
   readonly body: HTMLElement;
@@ -197,6 +216,87 @@ export class ModalManager {
         ],
         onClose: () => resolve(confirmed),
       });
+    });
+  }
+
+  /**
+   * Asks for a single value. Resolves with the trimmed text, or null when cancelled.
+   * Invalid values (see `required` / `validate`) keep the modal open, shake it and show the error.
+   */
+  prompt(options: PromptOptions): Promise<string | null> {
+    const t = (text: string) => this.ctx.translate(text, options.params);
+    const body = el('div', 'atrium-prompt');
+    if (options.message) body.appendChild(el('p', 'atrium-prompt-message', t(options.message)));
+
+    const fieldId = `atrium-prompt-${Date.now()}`;
+    if (options.label) {
+      const label = el('label', 'atrium-label', t(options.label));
+      label.htmlFor = fieldId;
+      body.appendChild(label);
+    }
+
+    const field = options.multiline ? el('textarea', 'atrium-input') : el('input', 'atrium-input');
+    field.id = fieldId;
+    field.value = options.value ?? '';
+    if (options.placeholder) field.placeholder = t(options.placeholder);
+    if (field instanceof HTMLInputElement) field.type = 'text';
+    field.setAttribute('aria-describedby', `${fieldId}-error`);
+    body.appendChild(field);
+
+    const error = el('p', 'atrium-field-error');
+    error.id = `${fieldId}-error`;
+    error.setAttribute('role', 'alert');
+    body.appendChild(error);
+
+    const setError = (message: string) => {
+      error.textContent = message;
+      field.classList.toggle('is-invalid', !!message);
+      field.setAttribute('aria-invalid', String(!!message));
+    };
+    field.addEventListener('input', () => setError(''));
+
+    return new Promise((resolve) => {
+      let result: string | null = null;
+      let confirmButton: HTMLButtonElement | null = null;
+
+      const handle = this.open({
+        title: options.title,
+        icon: options.icon,
+        size: options.multiline ? 'normal' : 'small',
+        body,
+        params: options.params,
+        buttons: [
+          { text: options.cancelText ?? 'Cancel', variant: 'cancel' },
+          {
+            text: options.confirmText ?? 'OK',
+            variant: 'primary',
+            onClick: async (_e, modal) => {
+              const value = field.value.trim();
+              let message = '';
+              if (options.required !== false && !value) message = t('Please enter a value.');
+              else message = (await options.validate?.(value)) || '';
+              if (message) {
+                setError(t(message));
+                modal.shake();
+                field.focus();
+                return false;
+              }
+              result = value;
+            },
+          },
+        ],
+        onClose: () => resolve(result),
+      });
+
+      confirmButton = handle.element.querySelector<HTMLButtonElement>('.atrium-btn-primary');
+      (field as HTMLElement).addEventListener('keydown', (e: KeyboardEvent) => {
+        const submit = options.multiline ? e.key === 'Enter' && (e.ctrlKey || e.metaKey) : e.key === 'Enter';
+        if (submit && !e.isComposing) {
+          e.preventDefault();
+          confirmButton?.click();
+        }
+      });
+      field.select();
     });
   }
 

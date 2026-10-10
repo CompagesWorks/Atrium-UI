@@ -3,6 +3,7 @@ import './styles/index.css';
 import { createDropzone, type Dropzone, type DropzoneOptions } from './components/dropzone';
 import { MenuManager } from './components/menu';
 import { ModalManager } from './components/modal';
+import { CommandPalette } from './components/palette';
 import { enhanceSelect, type SelectHandle, type SelectOptions } from './components/select';
 import { createStatusbar, type Statusbar } from './components/statusbar';
 import { createTabs, type Tabs, type TabsOptions } from './components/tabs';
@@ -24,6 +25,8 @@ export interface Atrium {
   readonly menu: MenuManager;
   /** Floating tooltips. Elements with [data-atrium-tooltip] work automatically. */
   readonly tooltip: TooltipManager;
+  /** Command palette (Ctrl+K / ⌘K): `commands.register([...])`, `commands.open()`. */
+  readonly commands: CommandPalette;
   /** Wires tab buttons ([data-atrium-tab]) to panels ([data-atrium-panel]) with MOSAIC's switch animation. */
   tabs(options: TabsOptions): Tabs;
   /** Turns a native <select> into MOSAIC's custom dropdown (the native element stays in sync). */
@@ -60,6 +63,7 @@ export function createAtrium(options: AtriumOptions = {}): Atrium {
   const modal = new ModalManager(ctx);
   const menu = new MenuManager(ctx);
   const tooltip = new TooltipManager(ctx);
+  const commands = new CommandPalette(ctx, options.palette);
   const cleanups: (() => void)[] = [];
 
   return {
@@ -67,6 +71,7 @@ export function createAtrium(options: AtriumOptions = {}): Atrium {
     modal,
     menu,
     tooltip,
+    commands,
     tabs: (tabOptions) => {
       const tabs = createTabs(ctx, tabOptions);
       cleanups.push(() => tabs.destroy());
@@ -130,16 +135,19 @@ export function createAtrium(options: AtriumOptions = {}): Atrium {
       modal.destroy();
       menu.destroy();
       tooltip.destroy();
+      commands.destroy();
     },
   };
 }
 
-export { stagger, replayAnimation } from './core/dom';
-export { ToastManager, ModalManager, MenuManager, TooltipManager };
+export { stagger, replayAnimation, highlight } from './core/dom';
+export { formatShortcut, matchesShortcut, renderShortcut } from './core/keys';
+export { ToastManager, ModalManager, MenuManager, TooltipManager, CommandPalette };
 export type { AtriumOptions, MotionMode, ThemeName, SoundName, TranslateParams } from './core/context';
 export type { ToastType, ToastOptions } from './components/toast';
 export type { Tabs, TabsOptions, TabTransition } from './components/tabs';
-export type { MenuEntry, MenuItem } from './components/menu';
+export type { MenuEntry, MenuItem, MenuPlacement, MenuAnchorOptions } from './components/menu';
+export type { Command, PaletteOptions } from './components/palette';
 export type { SelectHandle, SelectOptions } from './components/select';
 export type { Statusbar, StatusTone } from './components/statusbar';
 export type { Dropzone, DropzoneOptions } from './components/dropzone';
@@ -147,6 +155,7 @@ export type { AtriumWindowApi } from './electron';
 export type { TooltipOptions, TooltipPlacement } from './components/tooltip';
 export type {
   ModalOptions,
+  PromptOptions,
   ModalButton,
   ModalHandle,
   ModalSize,

@@ -70,6 +70,12 @@
       .pg-shell-content { padding: 20px; flex-direction: column; align-items: flex-start; }
       .pg-shell .atrium-statusbar { margin-left: 0; }
       select.atrium-input { width: auto; }
+      .pg-settings {
+        height: 460px;
+        border: 1px solid var(--atrium-border-color);
+        border-radius: 12px;
+        overflow: hidden;
+      }
       .pg-footer {
         display: flex;
         flex-wrap: wrap;
@@ -137,6 +143,17 @@
           <p>Any project that uses Atrium-UI must show "UI by Atrium-UI" with a link to the repository <strong>inside the app, in its About screen</strong>. A mention only in a README or in the code does not count. See the LICENSE file.</p>
         </div>
       </aside>
+
+      <section class="atrium-enter-fade" style="--atrium-delay: 0.08s">
+        <h2>Command palette</h2>
+        <div class="pg-row">
+          <button class="atrium-settings-btn" id="open-palette"><i class="bi bi-command"></i>Open the palette</button>
+          <span class="pg-muted">or press</span>
+          <span id="palette-hotkey"></span>
+          <span class="pg-muted">· try "theme", "toast", "rename" or a shortcut like</span>
+          <span id="palette-theme-hotkey"></span>
+        </div>
+      </section>
 
       <section class="atrium-enter-fade" style="--atrium-delay: 0.1s">
         <h2>Settings</h2>
@@ -375,10 +392,18 @@
       </section>
 
       <section class="atrium-enter-fade" style="--atrium-delay: 0.28s">
-        <h2>Context menu</h2>
+        <h2>Context menu &amp; dropdowns</h2>
         <div class="pg-menu-target" id="menu-target">
           <i class="bi bi-mouse2"></i>
           <span>Right-click here</span>
+        </div>
+        <div class="pg-group" style="margin-top: 20px">
+          <h3>atrium.menu.attach(button, items) <span>— click, or focus and press ↓ / Enter</span></h3>
+          <div class="pg-row">
+            <button class="atrium-settings-btn" id="dropdown-sort"><i class="bi bi-sort-down"></i>Sort by<i class="bi bi-chevron-down" style="font-size: 11px"></i></button>
+            <button class="atrium-compact-btn is-icon" id="dropdown-more" aria-label="More actions"><i class="bi bi-three-dots"></i></button>
+            <button class="atrium-btn atrium-btn-primary" id="dropdown-new"><i class="bi bi-plus-lg"></i>New</button>
+          </div>
         </div>
       </section>
 
@@ -494,6 +519,78 @@
         </div>
       </section>
 
+      <section class="atrium-enter-fade" style="--atrium-delay: 0.305s">
+        <h2>Settings page</h2>
+        <div class="pg-group">
+          <h3>atrium-settings · atrium-settings-section <span>(MOSAIC)</span> · atrium-setting-row <span>(new)</span> · highlight()</h3>
+          <div class="pg-settings">
+            <div class="atrium-settings">
+              <nav class="atrium-settings-sidebar" id="settings-nav">
+                <button class="atrium-tab-btn" data-atrium-tab="general"><i class="bi bi-sliders"></i>General</button>
+                <button class="atrium-tab-btn" data-atrium-tab="appearance"><i class="bi bi-palette"></i>Appearance</button>
+              </nav>
+              <div class="atrium-settings-content" id="settings-panels">
+                <div data-atrium-panel="general">
+                  <div class="atrium-settings-title" role="heading" aria-level="2">General</div>
+                  <div class="atrium-settings-group-title"><i class="bi bi-rocket-takeoff"></i>Startup</div>
+                  <section class="atrium-settings-section">
+                    <div class="atrium-setting-row">
+                      <div class="atrium-setting-text">
+                        <span class="atrium-setting-title">Launch at login</span>
+                        <span class="atrium-setting-desc">Start the app in the background when you sign in.</span>
+                      </div>
+                      <label class="atrium-switch"><input type="checkbox" aria-label="Launch at login" /><span class="atrium-switch-slider"></span></label>
+                    </div>
+                    <div class="atrium-setting-row" id="setting-updates">
+                      <div class="atrium-setting-text">
+                        <span class="atrium-setting-title">Update channel</span>
+                        <span class="atrium-setting-desc">Beta builds get new features first and may be less stable.</span>
+                      </div>
+                      <select id="setting-channel" aria-label="Update channel">
+                        <option value="stable">Stable</option>
+                        <option value="beta">Beta</option>
+                      </select>
+                    </div>
+                    <div class="atrium-setting-row">
+                      <div class="atrium-setting-text">
+                        <span class="atrium-setting-title">Cache</span>
+                        <span class="atrium-setting-desc">Thumbnails and downloads kept on disk (312 MB).</span>
+                      </div>
+                      <button class="atrium-settings-btn">Clear cache</button>
+                    </div>
+                  </section>
+                  <div class="atrium-settings-group-title"><i class="bi bi-folder2"></i>Library</div>
+                  <section class="atrium-settings-section" id="setting-library">
+                    <label class="atrium-settings-label" for="setting-folder">Mods folder</label>
+                    <div class="atrium-input-group">
+                      <input id="setting-folder" class="atrium-settings-input" value="C:\Games\Mods" readonly />
+                      <button class="atrium-input-btn"><i class="bi bi-folder2-open"></i>Browse</button>
+                    </div>
+                    <p class="atrium-settings-hint">Where your mods are stored. Changing it moves nothing.</p>
+                  </section>
+                </div>
+                <div data-atrium-panel="appearance">
+                  <div class="atrium-settings-title" role="heading" aria-level="2">Appearance</div>
+                  <section class="atrium-settings-section">
+                    <div class="atrium-setting-row is-stacked">
+                      <div class="atrium-setting-text">
+                        <span class="atrium-setting-title">Interface scale</span>
+                        <span class="atrium-setting-desc">Makes text and controls larger or smaller.</span>
+                      </div>
+                      <input class="atrium-range" type="range" min="80" max="140" value="100" aria-label="Interface scale" />
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pg-row" style="margin-top: 12px">
+            <button class="atrium-btn atrium-btn-secondary" id="highlight-row">Highlight "Update channel"</button>
+            <button class="atrium-btn atrium-btn-secondary" id="highlight-section">Highlight "Mods folder"</button>
+          </div>
+        </div>
+      </section>
+
       <section class="atrium-enter-fade" style="--atrium-delay: 0.31s">
         <h2>App shell</h2>
         <div class="pg-group">
@@ -542,6 +639,7 @@
           <button class="atrium-btn atrium-btn-secondary" id="modal-alert">Alert</button>
           <button class="atrium-btn atrium-btn-secondary" id="modal-form">Form + shake</button>
           <button class="atrium-btn atrium-btn-secondary" id="modal-stacked">Stacked modals</button>
+          <button class="atrium-btn atrium-btn-secondary" id="modal-prompt">Prompt</button>
         </div>
       </section>
 
